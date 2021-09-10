@@ -1,0 +1,5 @@
+name: Man10Raid
+version: '${project.version}'
+main: com.shojabon.man10raid.Man10Raid
+api-version: 1.17
+authors: [ Sho0 ]
