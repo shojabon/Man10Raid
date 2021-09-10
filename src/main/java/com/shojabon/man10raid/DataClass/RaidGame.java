@@ -18,6 +18,7 @@ public class RaidGame {
 
     // raid settings
 
+    public String gameName;
 
     public int scheduledGames = 0;
     public int currentGame = 0;
@@ -34,6 +35,9 @@ public class RaidGame {
 
     public int revivesAllowed = 0;
 
+
+    public int playersAllowed = 50;
+    public int maxPlayersAllowed = 55;
     public HashMap<UUID, RaidPlayer> players = new HashMap<>();
 
 
