@@ -1,0 +1,15 @@
+
+time:
+  registration: 120
+  preparation: 60
+  inGame: 3000
+  endArea: 100
+
+scheduledGames: 2
+
+settings:
+  friendlyFire: false
+  revivesAllowed: 5
+  playersAllowed: 100
+  maxPlayersAllowed: 105
+  minimumPlayersToBegin: 10

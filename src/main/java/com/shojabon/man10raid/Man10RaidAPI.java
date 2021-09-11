@@ -1,6 +1,7 @@
 package com.shojabon.man10raid;
 
 import com.shojabon.man10raid.DataClass.RaidGame;
+import com.shojabon.man10raid.Enums.RaidState;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,7 +31,14 @@ public class Man10RaidAPI {
         YamlConfiguration config = new YamlConfiguration();
         // save data
         config.set("scheduledGames", game.scheduledGames);
-        config.set("gameTime", game.gameTime);
+
+        //time settings
+        config.set("time.registration", game.registrationTime);
+        config.set("time.preparation", game.preparationTime);
+        config.set("time.inGame", game.inGameTime);
+        config.set("time.endArea", game.endAreaTime);
+
+
         config.set("locations.playerSpawn", game.playerSpawnPoints);
         config.set("locations.endArea", game.endArea);
         config.set("settings.friendlyFire", game.friendlyFire);
@@ -66,6 +74,19 @@ public class Man10RaidAPI {
 
         games.put(name, raid);
         return games.get(name);
+    }
+
+    //current game control
+
+    public void endGame(){
+        if(currentGame == null) return;
+        currentGame.setGameState(RaidState.INACTIVE);
+        currentGame = null;
+    }
+
+    public void cancelGame(){
+        if(currentGame == null) return;
+        currentGame.currentGameStateData.beforeCancel();
     }
 
 

@@ -1,11 +1,10 @@
 package com.shojabon.man10raid.DataClass;
 
-import com.shojabon.man10raid.DataClass.States.EndRegisterState;
+import com.shojabon.man10raid.DataClass.States.InGameState;
+import com.shojabon.man10raid.DataClass.States.PreparationState;
 import com.shojabon.man10raid.DataClass.States.RegisteringState;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
-import com.shojabon.man10raid.Utils.BaseUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -27,17 +26,22 @@ public class RaidGame {
     public int scheduledGames = 0;
     public int currentGame = 0;
 
-    public int gameTime = 0;
-    public int currentGameTime = 0;
+    //time settings
+    public int registrationTime = 0;
+    public int preparationTime = 0;
+    public int inGameTime = 0;
+    public int endAreaTime = 0;
 
+
+    //location settings
     public ArrayList<Location> playerSpawnPoints = new ArrayList<>();
     public Location endArea = null;
 
+    //game settings
     public boolean friendlyFire = false;
-
     public int revivesAllowed = 0;
 
-
+    //player count settings
     public int playersAllowed = 50;
     public int minimumPlayersToBegin = 0;
     public int maxPlayersAllowed = 55;
@@ -49,7 +53,14 @@ public class RaidGame {
 
     public RaidGame(String name, FileConfiguration config){
         scheduledGames = config.getInt("scheduledGames");
-        gameTime = config.getInt("gameTime");
+
+        //time settings
+        registrationTime = config.getInt("time.registration");
+        preparationTime = config.getInt("time.preparationTime");
+        inGameTime = config.getInt("time.inGame");
+        endAreaTime = config.getInt("time.endArea");
+
+
         playerSpawnPoints = (ArrayList<Location>) config.getList("locations.playerSpawn", new ArrayList<Location>());
         endArea = config.getLocation("locations.endArea");
         friendlyFire = config.getBoolean("settings.friendlyFire");
@@ -62,7 +73,7 @@ public class RaidGame {
 
     // state functions
 
-    public boolean changeGameState(RaidState state){
+    public boolean setGameState(RaidState state){
         if(state == currentGameState) return true;
 
         currentGameState = state;
@@ -84,8 +95,10 @@ public class RaidGame {
         switch (state){
             case REGISTERING:
                 return new RegisteringState();
-            case END_REGISTRATION:
-                return new EndRegisterState();
+            case PREPARATION:
+                return new PreparationState();
+            case IN_GAME:
+                return new InGameState();
         }
         return null;
     }
@@ -126,6 +139,24 @@ public class RaidGame {
             }
         }
     }
+
+    public ArrayList<RaidPlayer> getPlayersInGame(int gameNumber){
+        ArrayList<RaidPlayer> result = new ArrayList<>();
+        for(RaidPlayer player: players.values()){
+            if(player.registeredGame == gameNumber) result.add(player);
+        }
+        return result;
+    }
+
+    //set settings functions
+
+    //player spawn point
+
+    public void addPlayerSpawnPoint(Location l){
+        playerSpawnPoints.add(l);
+        Man10Raid.api.saveRaidGameConfig(this);
+    }
+
 
 
 

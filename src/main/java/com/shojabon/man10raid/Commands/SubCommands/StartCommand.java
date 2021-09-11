@@ -30,7 +30,7 @@ public class StartCommand implements CommandExecutor {
         }
         raid.gameId = UUID.randomUUID();
         Man10Raid.api.currentGame = raid;
-        raid.changeGameState(RaidState.REGISTERING);
+        raid.setGameState(RaidState.REGISTERING);
         sender.sendMessage(Man10Raid.prefix + "§a§l" + args[1] + "の予備登録を開始しました");
         return true;
     }

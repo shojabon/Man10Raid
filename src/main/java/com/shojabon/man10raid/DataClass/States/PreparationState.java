@@ -8,15 +8,13 @@ import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class EndRegisterState extends RaidStateData {
+public class PreparationState extends RaidStateData {
 
     RaidGame raid = Man10Raid.api.currentGame;
-    STimer timerTillBegin = new STimer();
 
 
     @Override
     public void start() {
-        defineTimer();
         raid.dividePlayers();
         for(RaidPlayer player: raid.players.values()){
             if(player.getPlayer() == null) continue; //if offline
@@ -30,7 +28,7 @@ public class EndRegisterState extends RaidStateData {
             }
         }
 
-        timerTillBegin.start();
+        timerTillNextState.start(); //start count down
     }
 
 
@@ -38,14 +36,15 @@ public class EndRegisterState extends RaidStateData {
     public void end() {
     }
 
-
+    @Override
     public void defineTimer(){
-        timerTillBegin.setRemainingTime(60);
-        timerTillBegin.addOnIntervalEvent(e -> {
-            Bukkit.getServer().broadcastMessage(e + " seconds remainng");
+        timerTillNextState.setRemainingTime(raid.preparationTime);
+        timerTillNextState.addOnIntervalEvent(e -> {
+            Bukkit.getServer().broadcastMessage(e + " seconds remaining");
         });
-        timerTillBegin.addOnEndEvent(() -> {
+        timerTillNextState.addOnEndEvent(() -> {
             Bukkit.getServer().broadcastMessage("end!");
+
         });
     }
 

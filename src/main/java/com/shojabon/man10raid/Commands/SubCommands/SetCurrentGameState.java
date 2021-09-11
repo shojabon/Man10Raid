@@ -19,7 +19,7 @@ public class SetCurrentGameState implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         RaidGame raid = Man10Raid.api.currentGame;
         try{
-            raid.changeGameState(RaidState.valueOf(args[1]));
+            raid.setGameState(RaidState.valueOf(args[1]));
         }catch (Exception e){
             e.printStackTrace();
         }

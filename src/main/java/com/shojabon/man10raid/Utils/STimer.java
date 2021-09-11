@@ -20,12 +20,13 @@ public class STimer {
             }
 
             remainingTime -= 1;
-            if(remainingTime < 0) {
+            if(remainingTime <= 0) {
                 //timer end
                 for(Runnable event: onEndEvents){
                     event.run();
                 }
                 timerMoving = false;
+                return;
             }
 
             //end of interval events
