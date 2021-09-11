@@ -29,7 +29,6 @@ public class Man10RaidAPI {
 
         YamlConfiguration config = new YamlConfiguration();
         // save data
-        config.set("name", game.gameName);
         config.set("scheduledGames", game.scheduledGames);
         config.set("gameTime", game.gameTime);
         config.set("locations.playerSpawn", game.playerSpawnPoints);
@@ -62,7 +61,7 @@ public class Man10RaidAPI {
             return null;
         }
 
-        RaidGame raid = new RaidGame(config);
+        RaidGame raid = new RaidGame(name, config);
 
         games.put(name, raid);
         return games.get(name);

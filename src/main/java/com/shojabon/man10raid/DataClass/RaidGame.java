@@ -19,6 +19,8 @@ public class RaidGame {
 
     // raid settings
 
+    public UUID gameId;
+
     public String gameName;
 
     public int scheduledGames = 0;
@@ -69,8 +71,7 @@ public class RaidGame {
 
     public RaidGame(){}
 
-    public RaidGame(FileConfiguration config){
-        gameName = config.getString("name");
+    public RaidGame(String name, FileConfiguration config){
         scheduledGames = config.getInt("scheduledGames");
         gameTime = config.getInt("gameTime");
         playerSpawnPoints = (ArrayList<Location>) config.getList("locations.playerSpawn", new ArrayList<Location>());
