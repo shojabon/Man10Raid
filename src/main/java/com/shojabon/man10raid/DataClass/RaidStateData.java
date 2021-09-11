@@ -14,16 +14,24 @@ public abstract class RaidStateData implements Listener {
 
     Plugin plugin = Bukkit.getPluginManager().getPlugin("Man10Raid");
 
+    //inner required start stop cancel functions
 
-    public void start(){
+    void beforeStart(){
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+        start();
     }
-    public void stop(){
+    void beforeStop(){
         HandlerList.unregisterAll(this);
-
+        stop();
     }
-    public void cancel(){
+    void beforeCancel(){
         HandlerList.unregisterAll(this);
-
+        cancel();
     }
+
+    // interface start stop cancel functions
+
+    public void start(){}
+    public void stop(){}
+    public void cancel(){}
 }

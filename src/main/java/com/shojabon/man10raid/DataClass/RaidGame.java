@@ -43,20 +43,35 @@ public class RaidGame {
     public int maxPlayersAllowed = 55;
     public HashMap<UUID, RaidPlayer> players = new HashMap<>();
 
+    // constructors
+    public RaidGame(){}
 
+    public RaidGame(String name, FileConfiguration config){
+        scheduledGames = config.getInt("scheduledGames");
+        gameTime = config.getInt("gameTime");
+        playerSpawnPoints = (ArrayList<Location>) config.getList("locations.playerSpawn", new ArrayList<Location>());
+        endArea = config.getLocation("locations.endArea");
+        friendlyFire = config.getBoolean("settings.friendlyFire");
+        revivesAllowed = config.getInt("settings.revivesAllowed");
+        playersAllowed = config.getInt("settings.playersAllowed");
+        maxPlayersAllowed = config.getInt("settings.maxPlayersAllowed");
+    }
+
+
+    // state functions
     public boolean changeGameState(RaidState state){
         if(state == currentGameState) return true;
 
         currentGameState = state;
         //stop current state
         if(currentGameStateData != null){
-            currentGameStateData.stop();
+            currentGameStateData.beforeStop();
         }
 
         //start next state
         RaidStateData data = getStateData(state);
         if(data == null) return true;
-        data.start();
+        data.beforeStart();
         //set current state data
         currentGameStateData = data;
         return true;
@@ -70,18 +85,6 @@ public class RaidGame {
         return null;
     }
 
-    public RaidGame(){}
-
-    public RaidGame(String name, FileConfiguration config){
-        scheduledGames = config.getInt("scheduledGames");
-        gameTime = config.getInt("gameTime");
-        playerSpawnPoints = (ArrayList<Location>) config.getList("locations.playerSpawn", new ArrayList<Location>());
-        endArea = config.getLocation("locations.endArea");
-        friendlyFire = config.getBoolean("settings.friendlyFire");
-        revivesAllowed = config.getInt("settings.revivesAllowed");
-        playersAllowed = config.getInt("settings.playersAllowed");
-        maxPlayersAllowed = config.getInt("settings.maxPlayersAllowed");
-    }
 
 
 
