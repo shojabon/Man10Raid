@@ -5,6 +5,7 @@ import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.BaseUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,20 @@ public class RaidGame {
                 Bukkit.getServer().dispatchCommand( Bukkit.getServer().getConsoleSender(), command);
             }
         });
+    }
+
+    public RaidGame(){}
+
+    public RaidGame(FileConfiguration config){
+        gameName = config.getString("name");
+        scheduledGames = config.getInt("scheduledGames");
+        gameTime = config.getInt("gameTime");
+        playerSpawnPoints = (ArrayList<Location>) config.getList("locations.playerSpawn", new ArrayList<Location>());
+        endArea = config.getLocation("locations.endArea");
+        friendlyFire = config.getBoolean("settings.friendlyFire");
+        revivesAllowed = config.getInt("settings.revivesAllowed");
+        playersAllowed = config.getInt("settings.playersAllowed");
+        maxPlayersAllowed = config.getInt("settings.maxPlayersAllowed");
     }
 
 

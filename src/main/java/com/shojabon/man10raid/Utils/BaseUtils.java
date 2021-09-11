@@ -1,6 +1,5 @@
 package com.shojabon.man10raid.Utils;
 
-import com.shojabon.man10shopv2.Enums.Man10ShopType;
 import org.bukkit.Material;
 
 public class BaseUtils {
@@ -53,11 +52,6 @@ public class BaseUtils {
             return "有効";
         }
         return "無効";
-    }
-
-    public static String buySellToString(Man10ShopType type){
-        if(type == Man10ShopType.BUY) return "販売ショップ";
-        return "買取ショップ";
     }
 
 

@@ -1,9 +1,9 @@
 package com.shojabon.man10raid.Utils.SInventory.ToolMenu;
 
-import com.shojabon.man10shopv2.Utils.SInventory.SInventory;
-import com.shojabon.man10shopv2.Utils.SInventory.SInventoryItem;
-import com.shojabon.man10shopv2.Utils.SItemStack;
-import com.shojabon.man10shopv2.Utils.SStringBuilder;
+import com.shojabon.man10raid.Utils.SInventory.SInventory;
+import com.shojabon.man10raid.Utils.SInventory.SInventoryItem;
+import com.shojabon.man10raid.Utils.SItemStack;
+import com.shojabon.man10raid.Utils.SStringBuilder;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
