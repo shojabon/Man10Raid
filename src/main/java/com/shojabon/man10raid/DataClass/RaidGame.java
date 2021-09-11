@@ -1,5 +1,6 @@
 package com.shojabon.man10raid.DataClass;
 
+import com.shojabon.man10raid.DataClass.States.EndRegisterState;
 import com.shojabon.man10raid.DataClass.States.RegisteringState;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
@@ -9,10 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class RaidGame {
 
@@ -41,6 +39,7 @@ public class RaidGame {
 
 
     public int playersAllowed = 50;
+    public int minimumPlayersToBegin = 0;
     public int maxPlayersAllowed = 55;
     public HashMap<UUID, RaidPlayer> players = new HashMap<>();
 
@@ -56,6 +55,7 @@ public class RaidGame {
         friendlyFire = config.getBoolean("settings.friendlyFire");
         revivesAllowed = config.getInt("settings.revivesAllowed");
         playersAllowed = config.getInt("settings.playersAllowed");
+        minimumPlayersToBegin = config.getInt("settings.minimumPlayersToBegin");
         maxPlayersAllowed = config.getInt("settings.maxPlayersAllowed");
     }
 
@@ -68,7 +68,7 @@ public class RaidGame {
         currentGameState = state;
         //stop current state
         if(currentGameStateData != null){
-            currentGameStateData.beforeStop();
+            currentGameStateData.beforeEnd();
         }
 
         //start next state
@@ -84,6 +84,8 @@ public class RaidGame {
         switch (state){
             case REGISTERING:
                 return new RegisteringState();
+            case END_REGISTRATION:
+                return new EndRegisterState();
         }
         return null;
     }
@@ -92,7 +94,7 @@ public class RaidGame {
 
     public boolean registerPlayer(Player p, boolean bypass){
         if(currentGameState != RaidState.REGISTERING && !bypass){
-            p.sendMessage(Man10Raid.prefix + "§c§lあなたはすでに登録されています");
+            p.sendMessage(Man10Raid.prefix + "§c§l現在選手登録をすることはできません");
             return false;
         }
         if(players.containsKey(p.getUniqueId())) {
@@ -102,6 +104,27 @@ public class RaidGame {
         players.put(p.getUniqueId(), new RaidPlayer(p.getName(), p.getUniqueId()));
         p.sendMessage(Man10Raid.prefix + "§a§l登録しました");
         return true;
+    }
+
+    public void dividePlayers(){
+        ArrayList<UUID> registeredPlayers = new ArrayList<>(players.keySet());
+        Collections.shuffle(registeredPlayers);
+
+        int maxGames = players.size()/playersAllowed+1;
+
+        if(maxGames > scheduledGames && scheduledGames != -1) maxGames = scheduledGames; //if maxGames bigger than scheduled games and not all player game
+
+        for(int game = 0; game < maxGames; game++){
+
+            // if total player bigger than game size
+            int playerPerGame = players.size();
+            if(playerPerGame > playersAllowed) playerPerGame = playersAllowed;
+
+            for(int i = 0; i < playerPerGame; i++){
+                RaidPlayer player = players.get(registeredPlayers.get(i));
+                player.registeredGame = game;
+            }
+        }
     }
 
 

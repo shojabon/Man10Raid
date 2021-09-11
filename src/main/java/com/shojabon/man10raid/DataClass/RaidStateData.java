@@ -20,9 +20,9 @@ public abstract class RaidStateData implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         start();
     }
-    void beforeStop(){
+    void beforeEnd(){
         HandlerList.unregisterAll(this);
-        stop();
+        end();
     }
     void beforeCancel(){
         HandlerList.unregisterAll(this);
@@ -32,6 +32,6 @@ public abstract class RaidStateData implements Listener {
     // interface start stop cancel functions
 
     public void start(){}
-    public void stop(){}
+    public void end(){}
     public void cancel(){}
 }

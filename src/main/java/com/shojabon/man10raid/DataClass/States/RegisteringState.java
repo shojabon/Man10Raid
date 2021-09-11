@@ -17,4 +17,9 @@ public class RegisteringState extends RaidStateData {
         Bukkit.getServer().broadcastMessage("started registration");
     }
 
+    @Override
+    public void end() {
+        Bukkit.getServer().broadcastMessage("end registration");
+    }
+
 }

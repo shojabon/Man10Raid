@@ -2,7 +2,9 @@ package com.shojabon.man10raid.Commands;
 
 
 import com.shojabon.man10raid.Commands.SubCommands.RegisterPlayerCommand;
+import com.shojabon.man10raid.Commands.SubCommands.SetCurrentGameState;
 import com.shojabon.man10raid.Commands.SubCommands.StartCommand;
+import com.shojabon.man10raid.Commands.SubCommands.TestCommand;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgument;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgumentType;
@@ -54,6 +56,25 @@ public class Man10RaidCommand extends SCommandRouter {
                         addRequiredPermission("man10raid.register.other").addExplanation("レイド選手登録をする").
                         setExecutor(new RegisterPlayerCommand(plugin))
         );
+
+        //test
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("test")).
+
+                        addRequiredPermission("man10raid.test").addExplanation("テストコマンド").
+                        setExecutor(new TestCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("setstate")).
+                        addArgument(new SCommandArgument().addAlias("状態")).
+
+                        addRequiredPermission("man10raid.test").addExplanation("試合の状態を設定する").
+                        setExecutor(new SetCurrentGameState(plugin))
+        );
+
     }
 
 }

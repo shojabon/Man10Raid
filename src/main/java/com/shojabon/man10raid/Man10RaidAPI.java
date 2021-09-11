@@ -37,6 +37,7 @@ public class Man10RaidAPI {
         config.set("settings.revivesAllowed", game.revivesAllowed);
         config.set("settings.playersAllowed", game.playersAllowed);
         config.set("settings.maxPlayersAllowed", game.maxPlayersAllowed);
+        config.set("settings.minimumPlayersToBegin", game.minimumPlayersToBegin);
 
         //file check
         File customConfigFile = new File(plugin.getDataFolder() + File.separator + "games", game.gameName + ".yml");

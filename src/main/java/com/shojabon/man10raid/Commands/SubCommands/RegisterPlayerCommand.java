@@ -33,8 +33,8 @@ public class RegisterPlayerCommand implements CommandExecutor {
             raid.registerPlayer(((Player)sender), false);
         }else{
             // if register other
-            Player targetPlayer = Bukkit.getServer().getPlayer(args[2]);
-            if(targetPlayer == null || !targetPlayer.getName().equals(args[2])){
+            Player targetPlayer = Bukkit.getServer().getPlayer(args[1]);
+            if(targetPlayer == null || !targetPlayer.getName().equals(args[1])){
                 sender.sendMessage(Man10Raid.prefix + "§c§lプレイヤーが存在しません");
                 return false;
             }
