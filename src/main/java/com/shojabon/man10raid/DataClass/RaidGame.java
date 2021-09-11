@@ -5,7 +5,9 @@ import com.shojabon.man10raid.DataClass.States.PreparationState;
 import com.shojabon.man10raid.DataClass.States.RegisteringState;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.Man10RaidAPI;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -47,6 +49,9 @@ public class RaidGame {
     public int maxPlayersAllowed = 55;
     public HashMap<UUID, RaidPlayer> players = new HashMap<>();
 
+    //commands
+    public HashMap<RaidState, ArrayList<String>> commands = new HashMap<>();
+
     // constructors
 
     public RaidGame(){}
@@ -68,6 +73,17 @@ public class RaidGame {
         playersAllowed = config.getInt("settings.playersAllowed");
         minimumPlayersToBegin = config.getInt("settings.minimumPlayersToBegin");
         maxPlayersAllowed = config.getInt("settings.maxPlayersAllowed");
+
+        //load commands
+        ConfigurationSection selection = config.getConfigurationSection("commands");
+        if(selection == null) return;
+        for(String key: selection.getKeys(false)){
+            try{
+                commands.put(RaidState.valueOf(key), new ArrayList<>(selection.getStringList(key)));
+            }catch (Exception e){
+
+            }
+        }
     }
 
 
@@ -88,6 +104,9 @@ public class RaidGame {
         data.beforeStart();
         //set current state data
         currentGameStateData = data;
+        //execute commands
+        if(!commands.containsKey(state)) return true;
+        Man10Raid.api.executeScript(commands.get(state));
         return true;
     }
 

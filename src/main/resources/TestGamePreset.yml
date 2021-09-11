@@ -13,3 +13,9 @@ settings:
   playersAllowed: 100
   maxPlayersAllowed: 105
   minimumPlayersToBegin: 10
+
+commands:
+  REGISTRACTION:
+    - say test
+    - sleep 5
+    - say test2

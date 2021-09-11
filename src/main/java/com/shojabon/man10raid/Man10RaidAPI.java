@@ -2,11 +2,14 @@ package com.shojabon.man10raid;
 
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.Enums.RaidState;
+import com.shojabon.man10raid.Utils.BaseUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Man10RaidAPI {
@@ -87,6 +90,29 @@ public class Man10RaidAPI {
     public void cancelGame(){
         if(currentGame == null) return;
         currentGame.currentGameStateData.beforeCancel();
+    }
+
+    //command script
+
+    public void executeScript(ArrayList<String> script){
+        Man10Raid.threadPool.submit(() -> {
+           for(String code: script){
+               String[] args = code.split(" ");
+
+               //sleep function
+               if(args[0].equalsIgnoreCase("sleep") && args.length == 2 && BaseUtils.isInt(args[1])){
+                   try {
+                       Thread.sleep(1000L * Integer.parseInt(args[1]));
+                   } catch (InterruptedException e) {
+                       e.printStackTrace();
+                   }
+                   continue;
+               }
+
+               //command function
+               Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), code));
+           }
+        });
     }
 
 

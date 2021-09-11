@@ -3,6 +3,7 @@ package com.shojabon.man10raid.Commands.SubCommands;
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +22,6 @@ public class TestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         RaidGame raid = Man10Raid.api.currentGame;
-        raid.addPlayerSpawnPoint(((Player) sender).getLocation());
         return true;
     }
 }

@@ -2,6 +2,7 @@ package com.shojabon.man10raid;
 
 import com.shojabon.man10raid.Commands.Man10RaidCommand;
 import com.shojabon.man10raid.DataClass.RaidGame;
+import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,5 +34,6 @@ public final class Man10Raid extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        STimer.pluginEnabled = false;
     }
 }

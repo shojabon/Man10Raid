@@ -5,14 +5,20 @@ import java.util.function.Consumer;
 
 public class STimer {
 
+    public static boolean pluginEnabled = true;
+
     public int remainingTime = 0;
     boolean timerMoving = false;
 
     ArrayList<Runnable> onEndEvents = new ArrayList<>();
     ArrayList<Consumer<Integer>> onIntervalEvents = new ArrayList<>();
 
+    public STimer(){
+        pluginEnabled = true;
+    }
+
     Thread timerThread = new Thread(() -> {
-        while(timerMoving){
+        while(timerMoving && pluginEnabled){
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
