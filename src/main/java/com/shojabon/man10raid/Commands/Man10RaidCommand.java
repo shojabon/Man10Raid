@@ -1,8 +1,10 @@
 package com.shojabon.man10raid.Commands;
 
 
+import com.shojabon.man10raid.Commands.SubCommands.Config.AddArenaPlayerSpawnPointCommand;
+import com.shojabon.man10raid.Commands.SubCommands.Config.SetLobbyCommand;
 import com.shojabon.man10raid.Commands.SubCommands.RegisterPlayerCommand;
-import com.shojabon.man10raid.Commands.SubCommands.SetCurrentGameState;
+import com.shojabon.man10raid.Commands.SubCommands.SetCurrentGameStateCommand;
 import com.shojabon.man10raid.Commands.SubCommands.StartCommand;
 import com.shojabon.man10raid.Commands.SubCommands.TestCommand;
 import com.shojabon.man10raid.Man10Raid;
@@ -10,8 +12,6 @@ import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgument;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgumentType;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandObject;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandRouter;
-
-import java.util.Arrays;
 
 public class Man10RaidCommand extends SCommandRouter {
 
@@ -72,9 +72,27 @@ public class Man10RaidCommand extends SCommandRouter {
                         addArgument(new SCommandArgument().addAlias("状態")).
 
                         addRequiredPermission("man10raid.test").addExplanation("試合の状態を設定する").
-                        setExecutor(new SetCurrentGameState(plugin))
+                        setExecutor(new SetCurrentGameStateCommand(plugin))
         );
 
+        //set lobby location
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("setlobby")).
+                        addRequiredPermission("man10raid.test").addExplanation("ロビーの位置を設定する").
+                        setExecutor(new SetLobbyCommand(plugin))
+        );
+
+        //add arena location
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("setting")).
+                        addArgument(new SCommandArgument().addAlias("アリーナ名")).
+                        addArgument(new SCommandArgument().addAllowedString("addSpawn")).
+                        addRequiredPermission("man10raid.settings.arena.playerspawn").addExplanation("アリーナのスポーンポイントを設定する").
+                        setExecutor(new AddArenaPlayerSpawnPointCommand(plugin))
+        );
     }
 
 }

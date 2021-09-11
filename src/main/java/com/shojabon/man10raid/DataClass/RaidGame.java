@@ -86,6 +86,16 @@ public class RaidGame {
         }
     }
 
+    // if game playable
+
+    public int playable(){
+        if(inGameTime < 0) return -1;
+        if(scheduledGames == 0) return -2;
+        if(playersAllowed <= 0) return -3;
+        if(playerSpawnPoints.size() == 0) return -4;
+        return 0;
+    }
+
 
     // state functions
 
@@ -169,10 +179,37 @@ public class RaidGame {
 
     //set settings functions
 
-    //player spawn point
+    //location point
 
     public void addPlayerSpawnPoint(Location l){
         playerSpawnPoints.add(l);
+        Man10Raid.api.saveRaidGameConfig(this);
+    }
+
+    public void setEndAreaPoint(Location l){
+        endArea = l;
+        Man10Raid.api.saveRaidGameConfig(this);
+    }
+
+    //time
+
+    public void setRegistrationTime(int time){
+        registrationTime = time;
+        Man10Raid.api.saveRaidGameConfig(this);
+    }
+
+    public void setPreparationTime(int time){
+        preparationTime = time;
+        Man10Raid.api.saveRaidGameConfig(this);
+    }
+
+    public void setInGameTime(int time){
+        inGameTime = time;
+        Man10Raid.api.saveRaidGameConfig(this);
+    }
+
+    public void setEndAreaTime(int time){
+        endAreaTime = time;
         Man10Raid.api.saveRaidGameConfig(this);
     }
 

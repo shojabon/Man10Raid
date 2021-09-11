@@ -28,6 +28,15 @@ public class StartCommand implements CommandExecutor {
             sender.sendMessage(Man10Raid.prefix + "§c§l現在ゲームが進行中です");
             return false;
         }
+        if(Man10Raid.config.getLocation("lobbyLocation") == null){
+            sender.sendMessage(Man10Raid.prefix + "§c§lロビーが設定されていません");
+            return false;
+        }
+
+        if(raid.playable() < 0){
+            sender.sendMessage(Man10Raid.prefix + "§c§lファイルにエラーがあります");
+            return false;
+        }
         raid.gameId = UUID.randomUUID();
         Man10Raid.api.currentGame = raid;
         raid.setGameState(RaidState.REGISTERING);

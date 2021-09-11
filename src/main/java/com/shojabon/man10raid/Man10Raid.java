@@ -2,6 +2,7 @@ package com.shojabon.man10raid;
 
 import com.shojabon.man10raid.Commands.Man10RaidCommand;
 import com.shojabon.man10raid.DataClass.RaidGame;
+import com.shojabon.man10raid.Utils.MySQL.ThreadedMySQLAPI;
 import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,18 +15,22 @@ public final class Man10Raid extends JavaPlugin {
     public static ExecutorService threadPool = Executors.newCachedThreadPool();
     public static Man10RaidAPI api;
     public static String prefix;
+    public static ThreadedMySQLAPI mysql;
 
     public static FileConfiguration config;
 
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         // Plugin startup logic
         api = new Man10RaidAPI(this);
         //
 
         config = getConfig();
+        prefix = config.getString("prefix");
 
+        mysql = new ThreadedMySQLAPI(this);
         Man10RaidCommand command = new Man10RaidCommand(this);
         getCommand("mraid").setExecutor(command);
         getCommand("mraid").setTabCompleter(command);

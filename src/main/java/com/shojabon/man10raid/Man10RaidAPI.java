@@ -90,6 +90,8 @@ public class Man10RaidAPI {
     public void cancelGame(){
         if(currentGame == null) return;
         currentGame.currentGameStateData.beforeCancel();
+        currentGame.setGameState(RaidState.INACTIVE);
+        currentGame = null;
     }
 
     //command script
@@ -113,6 +115,12 @@ public class Man10RaidAPI {
                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), code));
            }
         });
+    }
+
+    //clear cache
+
+    public void clearCache(){
+        games.clear();
     }
 
 
