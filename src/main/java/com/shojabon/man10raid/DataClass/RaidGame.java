@@ -1,5 +1,6 @@
 package com.shojabon.man10raid.DataClass;
 
+import com.shojabon.man10raid.DataClass.States.RegisteringState;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.BaseUtils;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class RaidGame {
 
     public RaidState currentGameState = RaidState.INACTIVE;
+    public RaidStateData currentGameStateData;
 
 
     // raid settings
@@ -29,8 +31,6 @@ public class RaidGame {
     public int gameTime = 0;
     public int currentGameTime = 0;
 
-    public HashMap<RaidState, List<String>> commandList = new HashMap<>();
-
     public ArrayList<Location> playerSpawnPoints = new ArrayList<>();
     public Location endArea = null;
 
@@ -44,29 +44,30 @@ public class RaidGame {
     public HashMap<UUID, RaidPlayer> players = new HashMap<>();
 
 
-    public void changeGameState(RaidState state){
-        if(state == currentGameState) return;
+    public boolean changeGameState(RaidState state){
+        if(state == currentGameState) return true;
 
         currentGameState = state;
-        List<String> commands = commandList.get(state);
-        Man10Raid.threadPool.submit(()-> {
-            for(String command: commands){
+        //stop current state
+        if(currentGameStateData != null){
+            currentGameStateData.stop();
+        }
 
-                //if sleep
-                String[] splitCommand = command.split(" ");
-                if(splitCommand[0].equalsIgnoreCase("sleep")){
-                    if(splitCommand.length != 2) continue;
-                    if(!BaseUtils.isInt(splitCommand[1])) continue;
-                    try {
-                        Thread.sleep(Integer.parseInt(splitCommand[1]));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+        //start next state
+        RaidStateData data = getStateData(state);
+        if(data == null) return true;
+        data.start();
+        //set current state data
+        currentGameStateData = data;
+        return true;
+    }
 
-                Bukkit.getServer().dispatchCommand( Bukkit.getServer().getConsoleSender(), command);
-            }
-        });
+    public RaidStateData getStateData(RaidState state){
+        switch (state){
+            case REGISTERING:
+                return new RegisteringState();
+        }
+        return null;
     }
 
     public RaidGame(){}
