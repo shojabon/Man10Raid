@@ -16,6 +16,7 @@ public final class Man10Raid extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         api = new Man10RaidAPI(this);
+        //
     }
 
     @Override
