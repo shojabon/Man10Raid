@@ -1,9 +1,11 @@
 package com.shojabon.man10raid.Commands;
 
 
+import com.shojabon.man10raid.Commands.SubCommands.RegisterPlayerCommand;
 import com.shojabon.man10raid.Commands.SubCommands.StartCommand;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgument;
+import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgumentType;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandObject;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandRouter;
 
@@ -33,6 +35,24 @@ public class Man10RaidCommand extends SCommandRouter {
                         addArgument(new SCommandArgument().addAlias("ゲームコンフィグ名")).
                         addRequiredPermission("man10raid.start").addExplanation("レイドを開始する").
                         setExecutor(new StartCommand(plugin))
+        );
+
+        //register player command
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("register")).
+                        addRequiredPermission("man10raid.register").addExplanation("レイド選手登録をする").
+                        setExecutor(new RegisterPlayerCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("register"))
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.ONLINE_PLAYER).addAlias("プレイヤー名")).
+
+                        addRequiredPermission("man10raid.register.other").addExplanation("レイド選手登録をする").
+                        setExecutor(new RegisterPlayerCommand(plugin))
         );
     }
 

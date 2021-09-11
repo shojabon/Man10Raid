@@ -7,6 +7,7 @@ import com.shojabon.man10raid.Utils.BaseUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class RaidGame {
     public HashMap<UUID, RaidPlayer> players = new HashMap<>();
 
     // constructors
+
     public RaidGame(){}
 
     public RaidGame(String name, FileConfiguration config){
@@ -59,6 +61,7 @@ public class RaidGame {
 
 
     // state functions
+
     public boolean changeGameState(RaidState state){
         if(state == currentGameState) return true;
 
@@ -85,6 +88,21 @@ public class RaidGame {
         return null;
     }
 
+    //registration function
+
+    public boolean registerPlayer(Player p, boolean bypass){
+        if(currentGameState != RaidState.REGISTERING && !bypass){
+            p.sendMessage(Man10Raid.prefix + "§c§lあなたはすでに登録されています");
+            return false;
+        }
+        if(players.containsKey(p.getUniqueId())) {
+            p.sendMessage(Man10Raid.prefix + "§c§lあなたはすでに登録されています");
+            return false;
+        }
+        players.put(p.getUniqueId(), new RaidPlayer(p.getName(), p.getUniqueId()));
+        p.sendMessage(Man10Raid.prefix + "§a§l登録しました");
+        return true;
+    }
 
 
 

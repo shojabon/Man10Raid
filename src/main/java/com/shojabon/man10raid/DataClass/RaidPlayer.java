@@ -8,5 +8,10 @@ public class RaidPlayer {
     String name;
     UUID uuid;
 
+    public RaidPlayer(String name, UUID uuid){
+        this.name = name;
+        this.uuid = uuid;
+    }
+
 
 }
