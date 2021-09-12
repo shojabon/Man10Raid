@@ -83,6 +83,7 @@ public class Man10RaidAPI {
 
     public void endGame(){
         if(currentGame == null) return;
+        currentGame.teleportAllPlayersToLobby();
         currentGame.setGameState(RaidState.INACTIVE);
         currentGame = null;
     }
@@ -90,6 +91,7 @@ public class Man10RaidAPI {
     public void cancelGame(){
         if(currentGame == null) return;
         currentGame.currentGameStateData.beforeCancel();
+        currentGame.teleportAllPlayersToLobby();
         currentGame.setGameState(RaidState.INACTIVE);
         currentGame = null;
     }

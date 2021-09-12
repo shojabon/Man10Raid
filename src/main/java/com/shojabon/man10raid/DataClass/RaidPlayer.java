@@ -7,7 +7,12 @@ import java.util.UUID;
 
 public class RaidPlayer {
 
+    //current game damage counters
     public double totalDamage = 0;
+    public double totalFriendlyDamage = 0;
+    public double totalProjectileDamage = 0;
+    public double totalHeal = 0;
+
     public String name;
     public UUID uuid;
     public int registeredGame = -1;

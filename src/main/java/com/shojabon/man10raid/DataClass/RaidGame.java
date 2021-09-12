@@ -1,22 +1,29 @@
 package com.shojabon.man10raid.DataClass;
 
+import com.shojabon.man10raid.DataClass.States.FinishState;
 import com.shojabon.man10raid.DataClass.States.InGameState;
 import com.shojabon.man10raid.DataClass.States.PreparationState;
 import com.shojabon.man10raid.DataClass.States.RegisteringState;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Man10RaidAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
 public class RaidGame {
 
+    Plugin plugin = Bukkit.getPluginManager().getPlugin("Man10Raid");
+
     public RaidState currentGameState = RaidState.INACTIVE;
     public RaidStateData currentGameStateData;
+
+    public boolean won = false;
 
 
     // raid settings
@@ -61,7 +68,7 @@ public class RaidGame {
 
         //time settings
         registrationTime = config.getInt("time.registration");
-        preparationTime = config.getInt("time.preparationTime");
+        preparationTime = config.getInt("time.preparation");
         inGameTime = config.getInt("time.inGame");
         endAreaTime = config.getInt("time.endArea");
 
@@ -128,6 +135,8 @@ public class RaidGame {
                 return new PreparationState();
             case IN_GAME:
                 return new InGameState();
+            case FINISH:
+                return new FinishState();
         }
         return null;
     }
@@ -151,8 +160,10 @@ public class RaidGame {
     public void dividePlayers(){
         ArrayList<UUID> registeredPlayers = new ArrayList<>(players.keySet());
         Collections.shuffle(registeredPlayers);
+        if(playersAllowed == 0) return;
 
-        int maxGames = players.size()/playersAllowed+1;
+
+        int maxGames = players.size()/playersAllowed;
 
         if(maxGames > scheduledGames && scheduledGames != -1) maxGames = scheduledGames; //if maxGames bigger than scheduled games and not all player game
 
@@ -163,7 +174,7 @@ public class RaidGame {
             if(playerPerGame > playersAllowed) playerPerGame = playersAllowed;
 
             for(int i = 0; i < playerPerGame; i++){
-                RaidPlayer player = players.get(registeredPlayers.get(i));
+                RaidPlayer player = players.get(registeredPlayers.get((game*playersAllowed) + i));
                 player.registeredGame = game;
             }
         }
@@ -178,7 +189,6 @@ public class RaidGame {
     }
 
     //set settings functions
-
     //location point
 
     public void addPlayerSpawnPoint(Location l){
@@ -211,6 +221,25 @@ public class RaidGame {
     public void setEndAreaTime(int time){
         endAreaTime = time;
         Man10Raid.api.saveRaidGameConfig(this);
+    }
+
+    //player functions
+
+    public RaidPlayer getPlayer(UUID uuid){
+        if(!players.containsKey(uuid)){
+            return null;
+        }
+        return players.get(uuid);
+    }
+
+    public void teleportAllPlayersToLobby(){
+        Bukkit.getServer().getScheduler().runTask(plugin, ()->{
+            for(RaidPlayer player: players.values()){
+                if(player.getPlayer() != null && player.getPlayer().isOnline()){
+                    player.getPlayer().teleport(Man10Raid.lobbyLocation);
+                }
+            }
+        });
     }
 
 

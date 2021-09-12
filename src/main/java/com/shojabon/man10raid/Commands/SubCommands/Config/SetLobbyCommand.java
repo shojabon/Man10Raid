@@ -23,6 +23,7 @@ public class SetLobbyCommand implements CommandExecutor {
             return false;
         }
         Man10Raid.config.set("lobbyLocation", ((Player) sender).getLocation());
+        Man10Raid.lobbyLocation = ((Player) sender).getLocation();
         plugin.saveConfig();
         sender.sendMessage(Man10Raid.prefix + "§a§lロビーを設定しました");
         return true;
