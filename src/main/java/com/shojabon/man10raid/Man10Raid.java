@@ -63,6 +63,7 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
     public void onDisable() {
         // Plugin shutdown logic
         STimer.pluginEnabled = false;
+        api.cancelGame();
     }
 
 }

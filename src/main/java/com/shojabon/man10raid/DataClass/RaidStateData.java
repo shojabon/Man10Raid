@@ -1,5 +1,6 @@
 package com.shojabon.man10raid.DataClass;
 
+import com.shojabon.man10raid.Utils.SScoreboard;
 import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
@@ -11,6 +12,7 @@ import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.Scoreboard;
 
 public abstract class RaidStateData implements Listener {
 
@@ -20,22 +22,34 @@ public abstract class RaidStateData implements Listener {
     //timer
     public STimer timerTillNextState = new STimer();
     public void defineTimer(){}
+
     //boss bar
     public BossBar bar = null;
     public void defineBossBar(){}
 
+    //score board
+    public SScoreboard scoreboard = null;
+    public void defineScoreboard(){}
 
     //inner required start stop cancel functions
 
     void beforeStart(){
         defineTimer();
         defineBossBar();
+        defineScoreboard();
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
 
         //register boss bar
         if(bar != null){
             for(Player p:Bukkit.getServer().getOnlinePlayers()){
                 this.bar.addPlayer(p);
+            }
+        }
+
+        //register scoreboard
+        if(scoreboard != null){
+            for(Player p:Bukkit.getServer().getOnlinePlayers()){
+                this.scoreboard.addPlayer(p);
             }
         }
 
@@ -47,9 +61,14 @@ public abstract class RaidStateData implements Listener {
         end();
 
         //remove bar
-        bar.removeAll();
-        bar.setVisible(false);
-        bar = null;
+        if(bar != null){
+            bar.removeAll();
+            bar.setVisible(false);
+            bar = null;
+        }
+
+        //scoreboard
+        if(scoreboard != null) scoreboard.remove();
     }
     public void beforeCancel(){
         HandlerList.unregisterAll(this);
@@ -57,9 +76,14 @@ public abstract class RaidStateData implements Listener {
         cancel();
 
         //remove bar
-        bar.removeAll();
-        bar.setVisible(false);
-        bar = null;
+        if(bar != null){
+            bar.removeAll();
+            bar.setVisible(false);
+            bar = null;
+        }
+
+        //scoreboard
+        if(scoreboard != null) scoreboard.remove();
     }
 
     // interface start stop cancel functions
@@ -74,6 +98,7 @@ public abstract class RaidStateData implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e){
         if(bar == null) return;
         bar.addPlayer(e.getPlayer());
+        scoreboard.addPlayer(e.getPlayer());
     }
 
     @EventHandler
