@@ -7,6 +7,8 @@ import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Man10RaidAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -56,6 +58,12 @@ public class InGameState extends RaidStateData {
             Bukkit.getServer().broadcastMessage("end!");
             endGame();
         });
+    }
+
+    @Override
+    public void defineBossBar() {
+        this.bar = Bukkit.createBossBar("ゲーム終了まで 残り{time}秒", BarColor.WHITE, BarStyle.SOLID);
+        timerTillNextState.linkBossBar(bar, true);
     }
 
     public void endGame(){

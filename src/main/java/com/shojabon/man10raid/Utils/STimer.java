@@ -1,5 +1,7 @@
 package com.shojabon.man10raid.Utils;
 
+import org.bukkit.boss.BossBar;
+
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -8,6 +10,7 @@ public class STimer {
     public static boolean pluginEnabled = true;
 
     public int remainingTime = 0;
+    public int originalTime = 0;
     boolean timerMoving = false;
 
     ArrayList<Runnable> onEndEvents = new ArrayList<>();
@@ -45,6 +48,7 @@ public class STimer {
 
     public void setRemainingTime(int time){
         this.remainingTime = time;
+        this.originalTime = time;
     }
 
     public void addRemainingTime(int time){
@@ -68,6 +72,26 @@ public class STimer {
 
     public void addOnIntervalEvent(Consumer<Integer> callback){
         onIntervalEvents.add(callback);
+    }
+
+    public void linkBossBar(BossBar bar, boolean countDown){
+        String originalTitle = bar.getTitle();
+        bar.setTitle(originalTitle.replace("{time}", String.valueOf(originalTime)));
+        addOnIntervalEvent(remaining -> {
+            bar.setTitle(originalTitle.replace("{time}", String.valueOf(remaining)));
+
+            double progress = (((double) remaining)-((double) originalTime))/((double) originalTime);
+            if(countDown)progress = ((double) remaining)/((double) originalTime);
+
+            bar.setProgress(progress);
+        });
+
+        addOnEndEvent(() -> {
+            double progress = 100;
+            if(countDown) progress = 0;
+            bar.setTitle(originalTitle.replace("{time}", "0"));
+            bar.setProgress(progress);
+        });
     }
 
 

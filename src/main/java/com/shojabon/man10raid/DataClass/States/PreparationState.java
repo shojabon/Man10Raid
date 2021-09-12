@@ -7,6 +7,8 @@ import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -55,6 +57,12 @@ public class PreparationState extends RaidStateData {
         timerTillNextState.addOnEndEvent(() -> {
             raid.setGameState(RaidState.IN_GAME);
         });
+    }
+
+    @Override
+    public void defineBossBar() {
+        this.bar = Bukkit.createBossBar("選手準備フェーズ 残り{time}秒", BarColor.WHITE, BarStyle.SOLID);
+        timerTillNextState.linkBossBar(bar, true);
     }
 
     public void sendHighlightedMessage(Player p, String message){

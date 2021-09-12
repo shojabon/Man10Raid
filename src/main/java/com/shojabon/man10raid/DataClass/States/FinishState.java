@@ -6,6 +6,8 @@ import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -52,6 +54,12 @@ public class FinishState extends RaidStateData {
             endGameProcess();
 
         });
+    }
+
+    @Override
+    public void defineBossBar() {
+        this.bar = Bukkit.createBossBar("終了フェーズ {time}秒", BarColor.WHITE, BarStyle.SOLID);
+        timerTillNextState.linkBossBar(bar, true);
     }
 
     //winner area
