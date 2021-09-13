@@ -16,6 +16,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -59,8 +60,18 @@ public class InGameState extends RaidStateData {
     @Override
     public void defineTimer(){
         timerTillNextState.setRemainingTime(raid.inGameTime);
+
+        ArrayList<RaidPlayer> players = raid.getPlayersInGame(raid.currentGame);
+
+        //action bar
         timerTillNextState.addOnIntervalEvent(e -> {
-            Bukkit.getServer().broadcastMessage(e + " seconds remaining");
+            for(RaidPlayer player: players){
+                Player p = player.getPlayer();
+                if(p == null) continue;
+                if(!p.isOnline()) continue;
+                if(player.livesLeft == 0) continue;
+                p.sendActionBar("総合ダメージ:" + player.totalDamage + " 総合回復:" + player.totalHeal + " 総合矢攻撃:" + player.totalProjectileDamage + " 残りライフ:" + player.livesLeft);
+            }
         });
         timerTillNextState.addOnEndEvent(() -> {
             Bukkit.getServer().broadcastMessage("end!");
@@ -84,6 +95,7 @@ public class InGameState extends RaidStateData {
             scoreboard.setText(1, "総合ダメージ量:" + totalDamage);
             scoreboard.setText(2, "総合回復量:" + totalHeal);
             scoreboard.setText(3, "総合弓ダメージ" + totalProjectileDamage);
+            scoreboard.setText(3, "総ライフ数: " + raid.allLivesLeftInCurrentGame());
         });
     }
 
@@ -109,6 +121,10 @@ public class InGameState extends RaidStateData {
         Player origin = ((Player) e.getDamager());
         RaidPlayer originPlayer = raid.getPlayer(origin.getUniqueId());
         if(originPlayer == null) return;
+
+        //if dead
+        if(originPlayer.livesLeft == 0) return;
+
         //if friendly fire
         if(raid.friendlyFire && e.getEntity() instanceof Player){
             originPlayer.totalFriendlyDamage += e.getDamage();
@@ -146,6 +162,11 @@ public class InGameState extends RaidStateData {
 
         RaidPlayer originPlayer = raid.getPlayer(((Player) originProjectile.getShooter()).getUniqueId());
         if(originPlayer == null) return;
+
+        //if dead
+        if(originPlayer.livesLeft == 0) return;
+
+
         originPlayer.totalProjectileDamage += e.getDamage();
         originPlayer.totalDamage += e.getDamage();
 
@@ -190,10 +211,24 @@ public class InGameState extends RaidStateData {
 
         RaidPlayer originPlayer = raid.getPlayer(originUUID);
         if(originPlayer == null) return;
+
+        //if dead
+        if(originPlayer.livesLeft == 0) return;
+
         originPlayer.totalHeal += e.getAmount();
         totalHeal += e.getAmount();
     }
 
+    //on death
 
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e){
+        raid.removeOneLife(e.getEntity().getUniqueId(), false);
+    }
+
+    @EventHandler
+    public void playerQuit(PlayerQuitEvent e){
+        raid.removeOneLife(e.getPlayer().getUniqueId(), true);
+    }
 
 }

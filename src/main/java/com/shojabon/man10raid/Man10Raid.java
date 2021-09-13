@@ -2,6 +2,7 @@ package com.shojabon.man10raid;
 
 import com.shojabon.man10raid.Commands.Man10RaidCommand;
 import com.shojabon.man10raid.DataClass.RaidGame;
+import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.Utils.MySQL.ThreadedMySQLAPI;
 import com.shojabon.man10raid.Utils.STimer;
 import com.shojabon.man10raid.Utils.SWhiteList;
@@ -18,6 +19,8 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -70,6 +73,15 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
         STimer.pluginEnabled = false;
         api.cancelGame();
         whitelist.disable();
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e){
+//        if(Man10Raid.api.currentGame == null) return;
+//        RaidPlayer player = Man10Raid.api.currentGame.getPlayer(e.getPlayer().getUniqueId());
+//        if(player == null) return;
+        e.getPlayer().teleport(Man10Raid.lobbyLocation);
+
     }
 
 }

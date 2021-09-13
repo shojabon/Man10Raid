@@ -1,11 +1,14 @@
 package com.shojabon.man10raid;
 
 import com.shojabon.man10raid.DataClass.RaidGame;
+import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Utils.BaseUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,9 +44,12 @@ public class Man10RaidAPI {
         config.set("time.inGame", game.inGameTime);
         config.set("time.endArea", game.endAreaTime);
 
-
+        //locations
         config.set("locations.playerSpawn", game.playerSpawnPoints);
+        config.set("locations.playerRespawn", game.respawnLocation);
         config.set("locations.endArea", game.endArea);
+
+
         config.set("settings.friendlyFire", game.friendlyFire);
         config.set("settings.revivesAllowed", game.revivesAllowed);
         config.set("settings.playersAllowed", game.playersAllowed);
@@ -83,6 +89,14 @@ public class Man10RaidAPI {
 
     public void endGame(){
         if(currentGame == null) return;
+
+        //reset spawn points
+        for(RaidPlayer player : currentGame.players.values()){
+            Player p = player.getPlayer();
+            if(p == null) continue;
+            p.setBedSpawnLocation(Man10Raid.lobbyLocation);
+        }
+
         currentGame.teleportAllPlayersToLobby();
         currentGame.setGameState(RaidState.INACTIVE);
         currentGame = null;
@@ -91,6 +105,14 @@ public class Man10RaidAPI {
 
     public void cancelGame(){
         if(currentGame == null) return;
+
+        //reset spawn points
+        for(RaidPlayer player : currentGame.players.values()){
+            Player p = player.getPlayer();
+            if(p == null) continue;
+            p.setBedSpawnLocation(Man10Raid.lobbyLocation);
+        }
+
         currentGame.currentGameStateData.beforeCancel();
         currentGame.teleportAllPlayersToLobby();
         currentGame.setGameState(RaidState.INACTIVE);

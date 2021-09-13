@@ -3,6 +3,7 @@ package com.shojabon.man10raid.Commands;
 
 import com.shojabon.man10raid.Commands.SubCommands.*;
 import com.shojabon.man10raid.Commands.SubCommands.Config.AddArenaPlayerSpawnPointCommand;
+import com.shojabon.man10raid.Commands.SubCommands.Config.SetArenaPlayerRespawnPointCommand;
 import com.shojabon.man10raid.Commands.SubCommands.Config.SetLobbyCommand;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgument;
@@ -71,6 +72,12 @@ public class Man10RaidCommand extends SCommandRouter {
                         setExecutor(new TestCommand(plugin))
         );
 
+        //===========================
+        //
+        //   arena configuration functions
+        //
+        //===========================
+
         //set lobby location
         addCommand(
                 new SCommandObject()
@@ -90,7 +97,24 @@ public class Man10RaidCommand extends SCommandRouter {
                         setExecutor(new AddArenaPlayerSpawnPointCommand(plugin))
         );
 
-        //current game functions
+        //add player respawn point
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("setting")).
+                        addArgument(new SCommandArgument().addAlias("アリーナ名")).
+                        addArgument(new SCommandArgument().addAllowedString("setRespawn")).
+                        addRequiredPermission("man10raid.settings.arena.playerRespawn").addExplanation("アリーナのスポーンポイントを設定する").
+                        setExecutor(new SetArenaPlayerRespawnPointCommand(plugin))
+        );
+
+
+
+        //===========================
+        //
+        //   current game functions
+        //
+        //===========================
 
         addCommand(
                 new SCommandObject()

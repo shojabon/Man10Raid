@@ -45,6 +45,7 @@ public class RaidGame {
     //location settings
     public ArrayList<Location> playerSpawnPoints = new ArrayList<>();
     public Location endArea = null;
+    public Location respawnLocation = null;
 
     //game settings
     public boolean friendlyFire = false;
@@ -64,6 +65,7 @@ public class RaidGame {
     public RaidGame(){}
 
     public RaidGame(String name, FileConfiguration config){
+        this.gameName = name;
         scheduledGames = config.getInt("scheduledGames");
 
         //time settings
@@ -74,7 +76,10 @@ public class RaidGame {
 
 
         playerSpawnPoints = (ArrayList<Location>) config.getList("locations.playerSpawn", new ArrayList<Location>());
+        respawnLocation = config.getLocation("locations.playerRespawn");
         endArea = config.getLocation("locations.endArea");
+
+
         friendlyFire = config.getBoolean("settings.friendlyFire");
         revivesAllowed = config.getInt("settings.revivesAllowed");
         playersAllowed = config.getInt("settings.playersAllowed");
@@ -178,6 +183,7 @@ public class RaidGame {
             for(int i = 0; i < playerPerGame; i++){
                 RaidPlayer player = players.get(registeredPlayers.get((game*playersAllowed) + i));
                 player.registeredGame = game;
+                player.livesLeft = revivesAllowed;
 
                 //set whitelist message
                 Man10Raid.whitelist.setKickMessages(player.uuid, "あなたは" + (game + 1)  + "試合目です");
@@ -200,6 +206,12 @@ public class RaidGame {
         playerSpawnPoints.add(l);
         Man10Raid.api.saveRaidGameConfig(this);
     }
+
+    public void setRespawnLocation(Location l){
+        respawnLocation = l;
+        Man10Raid.api.saveRaidGameConfig(this);
+    }
+
 
     public void setEndAreaPoint(Location l){
         endArea = l;
@@ -245,6 +257,51 @@ public class RaidGame {
                 }
             }
         });
+    }
+
+    public void removeOneLife(UUID uuid, boolean playerLeft){
+        RaidPlayer deadPlayer = getPlayer(uuid);
+        if(deadPlayer == null) return;
+        deadPlayer.livesLeft --;
+        Player p = deadPlayer.getPlayer();
+        if(p.isOnline() && !playerLeft){
+            if(deadPlayer.livesLeft != 0) {
+                //player still can play in arena
+                if(respawnLocation == null){
+                    //no respawn point
+                    p.setBedSpawnLocation(playerSpawnPoints.get(0), true);
+                }else{
+                    p.setBedSpawnLocation(respawnLocation, true);
+                }
+
+                p.sendMessage("残りライフ" + deadPlayer.livesLeft);
+            }else{
+                //no respawns left
+                p.setBedSpawnLocation(Man10Raid.lobbyLocation, true);
+                p.sendMessage("あなたは死んだ");
+            }
+        }
+
+        Bukkit.getScheduler().runTaskLater(plugin, ()->{
+            //write if all dead function here
+            if(allLivesLeftInCurrentGame() <= 0){
+                //all dead (not counting players in different server and in lobby)
+                Bukkit.broadcastMessage("全員死亡した");
+                setGameState(RaidState.FINISH);
+            }
+        }, 20);
+    }
+
+    public int allLivesLeftInCurrentGame(){
+        int total = 0;
+        for(RaidPlayer player: getPlayersInGame(currentGame)){
+            Player p = player.getPlayer();
+            if(p == null) continue;
+            if(!p.isOnline()) continue;
+            if(!p.getLocation().getWorld().equals(playerSpawnPoints.get(0).getWorld())) continue;
+            total += player.livesLeft;
+        }
+        return total;
     }
 
 
