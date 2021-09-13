@@ -18,6 +18,8 @@ public class SScoreboard {
 
     public ArrayList<String> displayText = new ArrayList<>();
 
+    int maxLineIndex = 0;
+
     public SScoreboard(String objectiveName){
         this.objectiveName = objectiveName;
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -51,8 +53,8 @@ public class SScoreboard {
     }
 
     public void setText(int lineNumber, String text){
-        //if list is no long enough
         displayText.set(lineNumber, text);
+        if(lineNumber > maxLineIndex) maxLineIndex = lineNumber;
         renderText();
     }
 
@@ -60,9 +62,9 @@ public class SScoreboard {
         Objective obj = scoreboard.getObjective(objectiveName);
         if(obj == null) return;
         clearScoreboard();
-        for(int i = 0; i < displayText.size(); i++){
+        for(int i = 0; i < maxLineIndex+1; i++){
             Score score = obj.getScore(displayText.get(i));
-            score.setScore((displayText.size() - i) +1);
+            score.setScore((displayText.size() - i));
         }
     }
 

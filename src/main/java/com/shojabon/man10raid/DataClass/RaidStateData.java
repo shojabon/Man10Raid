@@ -68,7 +68,10 @@ public abstract class RaidStateData implements Listener {
         }
 
         //scoreboard
-        if(scoreboard != null) scoreboard.remove();
+        if(scoreboard != null) {
+            scoreboard.remove();
+            scoreboard = null;
+        }
     }
     public void beforeCancel(){
         HandlerList.unregisterAll(this);
@@ -83,7 +86,10 @@ public abstract class RaidStateData implements Listener {
         }
 
         //scoreboard
-        if(scoreboard != null) scoreboard.remove();
+        if(scoreboard != null) {
+            scoreboard.remove();
+            scoreboard = null;
+        }
     }
 
     // interface start stop cancel functions

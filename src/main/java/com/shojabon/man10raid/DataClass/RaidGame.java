@@ -106,25 +106,27 @@ public class RaidGame {
 
     // state functions
 
-    public boolean setGameState(RaidState state){
-        if(state == currentGameState) return true;
+    public void setGameState(RaidState state){
+        if(state == currentGameState) return;
 
-        currentGameState = state;
-        //stop current state
-        if(currentGameStateData != null){
-            currentGameStateData.beforeEnd();
-        }
+        Bukkit.getScheduler().runTask(plugin, ()-> {
+            currentGameState = state;
+            //stop current state
+            if(currentGameStateData != null){
+                currentGameStateData.beforeEnd();
+            }
 
-        //start next state
-        RaidStateData data = getStateData(state);
-        if(data == null) return true;
-        data.beforeStart();
-        //set current state data
-        currentGameStateData = data;
-        //execute commands
-        if(!commands.containsKey(state)) return true;
-        Man10Raid.api.executeScript(commands.get(state));
-        return true;
+            //start next state
+            RaidStateData data = getStateData(state);
+            if(data == null) return;
+            data.beforeStart();
+            //set current state data
+            currentGameStateData = data;
+            //execute commands
+            if(!commands.containsKey(state)) return;
+            Man10Raid.api.executeScript(commands.get(state));
+        });
+        return;
     }
 
     public RaidStateData getStateData(RaidState state){

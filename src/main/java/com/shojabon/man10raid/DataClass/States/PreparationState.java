@@ -5,6 +5,7 @@ import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.DataClass.RaidStateData;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.Utils.SScoreboard;
 import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -65,6 +66,18 @@ public class PreparationState extends RaidStateData {
         timerTillNextState.linkBossBar(bar, true);
     }
 
+    @Override
+    public void defineScoreboard() {
+        scoreboard = new SScoreboard("TEST");
+        scoreboard.setTitle("選手準備中!!");
+        timerTillNextState.addOnIntervalEvent(e -> {
+            scoreboard.setText(0, "残り" + e + "秒");
+        });
+        scoreboard.setText(1, "test2");
+        scoreboard.setText(3, "test4");
+        scoreboard.setText(2, "test3");
+    }
+
     public void sendHighlightedMessage(Player p, String message){
         p.sendMessage("§e§l=================================");
         p.sendMessage("");
@@ -72,6 +85,5 @@ public class PreparationState extends RaidStateData {
         p.sendMessage("");
         p.sendMessage("§e§l=================================");
     }
-
 
 }

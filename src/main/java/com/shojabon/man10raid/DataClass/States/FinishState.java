@@ -4,6 +4,7 @@ import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.DataClass.RaidStateData;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.Utils.SScoreboard;
 import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -61,6 +62,19 @@ public class FinishState extends RaidStateData {
         this.bar = Bukkit.createBossBar("終了フェーズ {time}秒", BarColor.WHITE, BarStyle.SOLID);
         timerTillNextState.linkBossBar(bar, true);
     }
+
+    @Override
+    public void defineScoreboard() {
+        scoreboard = new SScoreboard("TEST");
+        scoreboard.setTitle("終了!!");
+        timerTillNextState.addOnIntervalEvent(e -> {
+            scoreboard.setText(0, "残り" + e + "秒");
+        });
+        scoreboard.setText(1, "test2");
+        scoreboard.setText(3, "test4");
+        scoreboard.setText(2, "test3");
+    }
+
 
     //winner area
     public void endAreaProcess(){

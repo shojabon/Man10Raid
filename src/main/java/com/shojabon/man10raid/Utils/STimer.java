@@ -27,6 +27,7 @@ public class STimer {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            if(!timerMoving) continue;
 
             remainingTime -= 1;
             if(remainingTime <= 0) {
