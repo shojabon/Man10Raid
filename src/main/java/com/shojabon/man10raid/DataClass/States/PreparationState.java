@@ -38,7 +38,15 @@ public class PreparationState extends RaidStateData {
             }
         }
 
-        //move player whitelist process
+        //start whitelist
+        Man10Raid.whitelist.clearPlayers();
+        for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
+            Man10Raid.whitelist.addPlayer(player.uuid);
+        }
+        Man10Raid.whitelist.enable();
+
+
+        //must move players here
 
         Bukkit.getServer().broadcastMessage("starting preparation timer");
         timerTillNextState.start(); //start count down

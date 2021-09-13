@@ -86,6 +86,7 @@ public class Man10RaidAPI {
         currentGame.teleportAllPlayersToLobby();
         currentGame.setGameState(RaidState.INACTIVE);
         currentGame = null;
+        Man10Raid.whitelist.disable();
     }
 
     public void cancelGame(){
@@ -94,6 +95,7 @@ public class Man10RaidAPI {
         currentGame.teleportAllPlayersToLobby();
         currentGame.setGameState(RaidState.INACTIVE);
         currentGame = null;
+        Man10Raid.whitelist.disable();
     }
 
     //command script

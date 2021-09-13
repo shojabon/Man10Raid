@@ -8,10 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class SetCurrentGameStateCommand implements CommandExecutor {
+public class LoseCommand implements CommandExecutor {
     Man10Raid plugin;
 
-    public SetCurrentGameStateCommand(Man10Raid plugin){
+    public LoseCommand(Man10Raid plugin){
         this.plugin = plugin;
     }
 
@@ -22,12 +22,12 @@ public class SetCurrentGameStateCommand implements CommandExecutor {
             sender.sendMessage(Man10Raid.prefix + "§c§l現在試合が行われていません");
             return true;
         }
-        try{
-            raid.setGameState(RaidState.valueOf(args[1]));
-        }catch (Exception e){
-            e.printStackTrace();
+        if(raid.currentGameState != RaidState.IN_GAME){
+            sender.sendMessage(Man10Raid.prefix + "§c§l現在試合中ではありません");
+            return true;
         }
-        sender.sendMessage(Man10Raid.prefix + "§a§l状態をセットしました");
+        raid.won = false;
+        raid.setGameState(RaidState.FINISH);
         return true;
     }
 }

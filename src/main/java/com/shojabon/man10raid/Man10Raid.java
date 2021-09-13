@@ -4,6 +4,7 @@ import com.shojabon.man10raid.Commands.Man10RaidCommand;
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.Utils.MySQL.ThreadedMySQLAPI;
 import com.shojabon.man10raid.Utils.STimer;
+import com.shojabon.man10raid.Utils.SWhiteList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,6 +40,8 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
 
     public static Location lobbyLocation;
 
+    public static SWhiteList whitelist;
+
 
     @Override
     public void onEnable() {
@@ -52,6 +55,8 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
         prefix = config.getString("prefix");
 
         mysql = new ThreadedMySQLAPI(this);
+        whitelist = new SWhiteList(this, "このサーバーに参加できません");
+        whitelist.setBypassPermission("man10raid.whitelist.bypass");
         Man10RaidCommand command = new Man10RaidCommand(this);
         getCommand("mraid").setExecutor(command);
         getCommand("mraid").setTabCompleter(command);
@@ -64,6 +69,7 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
         // Plugin shutdown logic
         STimer.pluginEnabled = false;
         api.cancelGame();
+        whitelist.disable();
     }
 
 }

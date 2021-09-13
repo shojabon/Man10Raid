@@ -178,6 +178,9 @@ public class RaidGame {
             for(int i = 0; i < playerPerGame; i++){
                 RaidPlayer player = players.get(registeredPlayers.get((game*playersAllowed) + i));
                 player.registeredGame = game;
+
+                //set whitelist message
+                Man10Raid.whitelist.setKickMessages(player.uuid, "あなたは" + (game + 1)  + "試合目です");
             }
         }
     }

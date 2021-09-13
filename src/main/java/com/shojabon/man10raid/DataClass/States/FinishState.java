@@ -1,6 +1,7 @@
 package com.shojabon.man10raid.DataClass.States;
 
 import com.shojabon.man10raid.DataClass.RaidGame;
+import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.DataClass.RaidStateData;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
@@ -12,6 +13,8 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
+
+import java.util.ArrayList;
 
 public class FinishState extends RaidStateData {
 

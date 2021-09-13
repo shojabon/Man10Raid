@@ -1,12 +1,9 @@
 package com.shojabon.man10raid.Commands;
 
 
+import com.shojabon.man10raid.Commands.SubCommands.*;
 import com.shojabon.man10raid.Commands.SubCommands.Config.AddArenaPlayerSpawnPointCommand;
 import com.shojabon.man10raid.Commands.SubCommands.Config.SetLobbyCommand;
-import com.shojabon.man10raid.Commands.SubCommands.RegisterPlayerCommand;
-import com.shojabon.man10raid.Commands.SubCommands.SetCurrentGameStateCommand;
-import com.shojabon.man10raid.Commands.SubCommands.StartCommand;
-import com.shojabon.man10raid.Commands.SubCommands.TestCommand;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgument;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgumentType;
@@ -30,6 +27,14 @@ public class Man10RaidCommand extends SCommandRouter {
     }
 
     public void registerCommands(){
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("reload")).
+                        addRequiredPermission("man10raid.reload").addExplanation("コンフィグをリロードする").
+                        setExecutor(new ReloadCommand(plugin))
+        );
+
         //start game command
         addCommand(
                 new SCommandObject()
@@ -66,15 +71,6 @@ public class Man10RaidCommand extends SCommandRouter {
                         setExecutor(new TestCommand(plugin))
         );
 
-        addCommand(
-                new SCommandObject()
-                        .addArgument(new SCommandArgument().addAllowedString("setstate")).
-                        addArgument(new SCommandArgument().addAlias("状態")).
-
-                        addRequiredPermission("man10raid.test").addExplanation("試合の状態を設定する").
-                        setExecutor(new SetCurrentGameStateCommand(plugin))
-        );
-
         //set lobby location
         addCommand(
                 new SCommandObject()
@@ -92,6 +88,35 @@ public class Man10RaidCommand extends SCommandRouter {
                         addArgument(new SCommandArgument().addAllowedString("addSpawn")).
                         addRequiredPermission("man10raid.settings.arena.playerspawn").addExplanation("アリーナのスポーンポイントを設定する").
                         setExecutor(new AddArenaPlayerSpawnPointCommand(plugin))
+        );
+
+        //current game functions
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("current"))
+                        .addArgument(new SCommandArgument().addAllowedString("setstate")).
+                        addArgument(new SCommandArgument().addAlias("状態")).
+
+                        addRequiredPermission("man10raid.test").addExplanation("試合の状態を設定する").
+                        setExecutor(new SetCurrentGameStateCommand(plugin))
+        );
+
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("current"))
+                        .addArgument(new SCommandArgument().addAllowedString("win")).
+                        addRequiredPermission("man10raid.win").addExplanation("試合を勝利にする").
+                        setExecutor(new WinCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("current"))
+                        .addArgument(new SCommandArgument().addAllowedString("lose")).
+                        addRequiredPermission("man10raid.lose").addExplanation("試合を敗北にする").
+                        setExecutor(new LoseCommand(plugin))
         );
     }
 

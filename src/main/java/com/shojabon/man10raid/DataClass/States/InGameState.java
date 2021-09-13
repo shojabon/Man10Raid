@@ -21,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
@@ -29,6 +30,12 @@ public class InGameState extends RaidStateData {
 
     RaidGame raid = Man10Raid.api.currentGame;
     Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Man10Raid");
+
+    //statistics
+    long totalDamage = 0;
+    long totalHeal = 0;
+    long totalProjectileDamage = 0;
+    long totalFriendlyFire = 0;
 
 
     @Override
@@ -71,12 +78,13 @@ public class InGameState extends RaidStateData {
     public void defineScoreboard() {
         scoreboard = new SScoreboard("TEST");
         scoreboard.setTitle("試合中!!");
+        ArrayList<RaidPlayer> players = raid.getPlayersInGame(raid.currentGame);
         timerTillNextState.addOnIntervalEvent(e -> {
             scoreboard.setText(0, "残り" + e + "秒");
+            scoreboard.setText(1, "総合ダメージ量:" + totalDamage);
+            scoreboard.setText(2, "総合回復量:" + totalHeal);
+            scoreboard.setText(3, "総合弓ダメージ" + totalProjectileDamage);
         });
-        scoreboard.setText(1, "test2");
-        scoreboard.setText(3, "test4");
-        scoreboard.setText(2, "test3");
     }
 
 
@@ -104,6 +112,8 @@ public class InGameState extends RaidStateData {
         //if friendly fire
         if(raid.friendlyFire && e.getEntity() instanceof Player){
             originPlayer.totalFriendlyDamage += e.getDamage();
+
+            totalFriendlyFire += e.getDamage();
             return;
         }
 
@@ -115,6 +125,8 @@ public class InGameState extends RaidStateData {
 
         //if other damage
         originPlayer.totalDamage += e.getDamage();
+
+        totalDamage += e.getDamage();
     }
 
     //arrow damage
@@ -136,6 +148,9 @@ public class InGameState extends RaidStateData {
         if(originPlayer == null) return;
         originPlayer.totalProjectileDamage += e.getDamage();
         originPlayer.totalDamage += e.getDamage();
+
+        totalProjectileDamage += e.getDamage();
+        totalDamage += e.getDamage();
     }
 
     //heal calculation
@@ -176,6 +191,7 @@ public class InGameState extends RaidStateData {
         RaidPlayer originPlayer = raid.getPlayer(originUUID);
         if(originPlayer == null) return;
         originPlayer.totalHeal += e.getAmount();
+        totalHeal += e.getAmount();
     }
 
 
