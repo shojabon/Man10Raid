@@ -5,6 +5,7 @@ import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.DataClass.RaidStateData;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.Man10RaidAPI;
 import com.shojabon.man10raid.Utils.SScoreboard;
 import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.Bukkit;
@@ -12,6 +13,9 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class PreparationState extends RaidStateData {
 
@@ -38,6 +42,14 @@ public class PreparationState extends RaidStateData {
             }
         }
 
+        //if no players
+        if(raid.getPlayersInGame(raid.currentGame).size() == 0){
+            //if no players
+            Bukkit.getServer().broadcastMessage("参加者がいませんでした");
+            Man10Raid.api.endGame();
+            return;
+        }
+
         //start whitelist
         Man10Raid.whitelist.clearPlayers();
         for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
@@ -45,11 +57,29 @@ public class PreparationState extends RaidStateData {
         }
         Man10Raid.whitelist.enable();
 
-
-        //must move players here
+        movePlayersToServers();
 
         Bukkit.getServer().broadcastMessage("starting preparation timer");
         timerTillNextState.start(); //start count down
+    }
+
+    public void movePlayersToServers(){
+        ArrayList<RaidPlayer> currentGamePlayers = raid.getPlayersInGame(raid.currentGame);
+        ArrayList<UUID> currentGamePlayerUUIDs = new ArrayList<>();
+        for(RaidPlayer player: currentGamePlayers) currentGamePlayerUUIDs.add(player.uuid);
+
+        //kick players
+        for(Player p: Bukkit.getServer().getOnlinePlayers()){
+            if(currentGamePlayerUUIDs.contains(p.getUniqueId())) continue;
+            if(p.hasPermission("man10raid.whitelist.bypass")) continue;
+            Man10Raid.api.sendPlayerToServer(p.getName(), Man10Raid.config.getString("servers.main"));
+        }
+
+        //move players to raid server
+        for(RaidPlayer player: currentGamePlayers){
+            Man10Raid.api.sendPlayerToServer(player.name, Man10Raid.config.getString("servers.raid"));
+        }
+
     }
 
 

@@ -4,6 +4,7 @@ import com.shojabon.man10raid.Commands.Man10RaidCommand;
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.Utils.MySQL.ThreadedMySQLAPI;
+import com.shojabon.man10raid.Utils.SInventory.SInventory;
 import com.shojabon.man10raid.Utils.STimer;
 import com.shojabon.man10raid.Utils.SWhiteList;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -64,6 +66,7 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
         getCommand("mraid").setExecutor(command);
         getCommand("mraid").setTabCompleter(command);
 
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getPluginManager().registerEvents(this, this);
     }
 
@@ -71,17 +74,16 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
     public void onDisable() {
         // Plugin shutdown logic
         STimer.pluginEnabled = false;
-        api.cancelGame();
+        api.endGame();
         whitelist.disable();
+        SInventory.closeAllSInventories();
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
-//        if(Man10Raid.api.currentGame == null) return;
-//        RaidPlayer player = Man10Raid.api.currentGame.getPlayer(e.getPlayer().getUniqueId());
-//        if(player == null) return;
         e.getPlayer().teleport(Man10Raid.lobbyLocation);
 
     }
+
 
 }

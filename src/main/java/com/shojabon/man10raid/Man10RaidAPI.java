@@ -10,6 +10,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,36 +90,39 @@ public class Man10RaidAPI {
     //current game control
 
     public void endGame(){
-        if(currentGame == null) return;
+        Bukkit.getScheduler().runTask(plugin, ()-> {
+            if(currentGame == null) return;
 
-        //reset spawn points
-        for(RaidPlayer player : currentGame.players.values()){
-            Player p = player.getPlayer();
-            if(p == null) continue;
-            p.setBedSpawnLocation(Man10Raid.lobbyLocation);
-        }
+            //reset spawn points
+            for(RaidPlayer player : currentGame.players.values()){
+                Player p = player.getPlayer();
+                if(p == null) continue;
+                p.setBedSpawnLocation(Man10Raid.lobbyLocation);
+            }
 
-        currentGame.teleportAllPlayersToLobby();
-        currentGame.setGameState(RaidState.INACTIVE);
-        currentGame = null;
-        Man10Raid.whitelist.disable();
+            currentGame.teleportAllPlayersToLobby();
+            currentGame.setGameState(RaidState.INACTIVE);
+            currentGame = null;
+            Man10Raid.whitelist.disable();
+        });
     }
 
     public void cancelGame(){
-        if(currentGame == null) return;
+        Bukkit.getScheduler().runTask(plugin, ()-> {
+            if(currentGame == null) return;
 
-        //reset spawn points
-        for(RaidPlayer player : currentGame.players.values()){
-            Player p = player.getPlayer();
-            if(p == null) continue;
-            p.setBedSpawnLocation(Man10Raid.lobbyLocation);
-        }
+            //reset spawn points
+            for(RaidPlayer player : currentGame.players.values()){
+                Player p = player.getPlayer();
+                if(p == null) continue;
+                p.setBedSpawnLocation(Man10Raid.lobbyLocation);
+            }
 
-        currentGame.currentGameStateData.beforeCancel();
-        currentGame.teleportAllPlayersToLobby();
-        currentGame.setGameState(RaidState.INACTIVE);
-        currentGame = null;
-        Man10Raid.whitelist.disable();
+            currentGame.teleportAllPlayersToLobby();
+            currentGame.setGameState(RaidState.INACTIVE);
+            currentGame = null;
+            Man10Raid.whitelist.disable();
+        });
     }
 
     //command script
@@ -147,6 +152,21 @@ public class Man10RaidAPI {
 
     public void clearCache(){
         games.clear();
+    }
+
+    //move player
+
+    public void sendPlayerToServer(String name, String server){
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(b);
+        try {
+            out.writeUTF("ConnectOther");
+            out.writeUTF(name);
+            out.writeUTF(server);
+        } catch (IOException eee) {
+            eee.printStackTrace();
+        }
+        plugin.getServer().sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
     }
 
 

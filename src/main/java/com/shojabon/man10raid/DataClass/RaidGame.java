@@ -6,7 +6,7 @@ import com.shojabon.man10raid.DataClass.States.PreparationState;
 import com.shojabon.man10raid.DataClass.States.RegisteringState;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
-import com.shojabon.man10raid.Man10RaidAPI;
+import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RaidGame {
 
@@ -121,6 +122,7 @@ public class RaidGame {
                 currentGameStateData.beforeEnd();
             }
 
+
             //start next state
             RaidStateData data = getStateData(state);
             if(data == null) return;
@@ -171,8 +173,10 @@ public class RaidGame {
 
 
         int maxGames = players.size()/playersAllowed;
+        if(maxGames == 0) maxGames = 1;
 
         if(maxGames > scheduledGames && scheduledGames != -1) maxGames = scheduledGames; //if maxGames bigger than scheduled games and not all player game
+        if(scheduledGames > maxGames) scheduledGames = maxGames; // if scheduled games is too many games for the amount of players
 
         for(int game = 0; game < maxGames; game++){
 
@@ -302,6 +306,107 @@ public class RaidGame {
             total += player.livesLeft;
         }
         return total;
+    }
+
+    public void teleportPlayerToArena(Player p){
+        if(respawnLocation == null){
+            p.teleport(playerSpawnPoints.get(0));
+        }else{
+            p.teleport(respawnLocation);
+        }
+    }
+
+
+    //ranking functions
+
+    public static <K, V extends Comparable<V> > Map<K, V>
+    valueSort(final Map<K, V> map)
+    {
+        Comparator<K> valueComparator = (k1, k2) -> {
+            int comp = map.get(k1).compareTo(
+                    map.get(k2));
+            if (comp == 0)
+                return 1;
+            else
+                return comp;
+        };
+
+        // SortedMap created using the comparator
+        Map<K, V> sorted = new TreeMap<K, V>(valueComparator);
+
+        sorted.putAll(map);
+
+        return sorted;
+    }
+
+
+    public ArrayList<RaidPlayer> getTotalDamageRanking(int game){
+        ArrayList<RaidPlayer> players = getPlayersInGame(game);
+        HashMap<UUID, RaidPlayer> playerMap = new HashMap<>();
+
+        ArrayList<RaidPlayer> result = new ArrayList<>();
+
+        TreeMap<UUID, Long> valueMap = new TreeMap<>();
+        for(RaidPlayer player: players) {
+            playerMap.put(player.uuid, player);
+            valueMap.put(player.uuid, player.totalDamage);
+        }
+
+        Map<UUID, Long> finalMap = valueSort(valueMap);
+
+        for(UUID uuid: finalMap.keySet()){
+            result.add(playerMap.get(uuid));
+        }
+        Collections.reverse(result);
+
+
+        return result;
+    }
+
+    public ArrayList<RaidPlayer> getTotalProjectileDamageRanking(int game){
+        ArrayList<RaidPlayer> players = getPlayersInGame(game);
+        HashMap<UUID, RaidPlayer> playerMap = new HashMap<>();
+
+        ArrayList<RaidPlayer> result = new ArrayList<>();
+
+        TreeMap<UUID, Long> valueMap = new TreeMap<>();
+        for(RaidPlayer player: players) {
+            playerMap.put(player.uuid, player);
+            valueMap.put(player.uuid, player.totalProjectileDamage);
+        }
+
+        Map<UUID, Long> finalMap = valueSort(valueMap);
+
+        for(UUID uuid: finalMap.keySet()){
+            result.add(playerMap.get(uuid));
+        }
+        Collections.reverse(result);
+
+
+        return result;
+    }
+
+    public ArrayList<RaidPlayer> getTotalHealRanking(int game){
+        ArrayList<RaidPlayer> players = getPlayersInGame(game);
+        HashMap<UUID, RaidPlayer> playerMap = new HashMap<>();
+
+        ArrayList<RaidPlayer> result = new ArrayList<>();
+
+        TreeMap<UUID, Long> valueMap = new TreeMap<>();
+        for(RaidPlayer player: players) {
+            playerMap.put(player.uuid, player);
+            valueMap.put(player.uuid, player.totalHeal);
+        }
+
+        Map<UUID, Long> finalMap = valueSort(valueMap);
+
+        for(UUID uuid: finalMap.keySet()){
+            result.add(playerMap.get(uuid));
+        }
+        Collections.reverse(result);
+
+
+        return result;
     }
 
 

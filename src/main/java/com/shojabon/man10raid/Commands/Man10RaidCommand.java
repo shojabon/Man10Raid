@@ -66,10 +66,26 @@ public class Man10RaidCommand extends SCommandRouter {
         //test
         addCommand(
                 new SCommandObject()
-                        .addArgument(new SCommandArgument().addAllowedString("test")).
+                        .addArgument(new SCommandArgument().addAllowedString("test"))
+                        .addArgument(new SCommandArgument().addAlias("name"))
+                        .addArgument(new SCommandArgument().addAlias("server"))
 
-                        addRequiredPermission("man10raid.test").addExplanation("テストコマンド").
+                        .addRequiredPermission("man10raid.test").addExplanation("テストコマンド").
                         setExecutor(new TestCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("vision"))
+
+                        .addArgument(new SCommandArgument().addAlias("モブタイプ")
+                                .addAllowedString("creeper")
+                                .addAllowedString("spider")
+                                .addAllowedString("enderman")
+                        )
+
+                        .addRequiredPermission("man10raid.vision").addExplanation("visionテスト").
+                        setExecutor(new VisionCommand(plugin))
         );
 
         //===========================
@@ -122,7 +138,7 @@ public class Man10RaidCommand extends SCommandRouter {
                         .addArgument(new SCommandArgument().addAllowedString("setstate")).
                         addArgument(new SCommandArgument().addAlias("状態")).
 
-                        addRequiredPermission("man10raid.test").addExplanation("試合の状態を設定する").
+                        addRequiredPermission("man10raid.current.state").addExplanation("試合の状態を設定する").
                         setExecutor(new SetCurrentGameStateCommand(plugin))
         );
 
@@ -131,7 +147,7 @@ public class Man10RaidCommand extends SCommandRouter {
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("current"))
                         .addArgument(new SCommandArgument().addAllowedString("win")).
-                        addRequiredPermission("man10raid.win").addExplanation("試合を勝利にする").
+                        addRequiredPermission("man10raid.current.win").addExplanation("試合を勝利にする").
                         setExecutor(new WinCommand(plugin))
         );
 
@@ -139,8 +155,17 @@ public class Man10RaidCommand extends SCommandRouter {
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("current"))
                         .addArgument(new SCommandArgument().addAllowedString("lose")).
-                        addRequiredPermission("man10raid.lose").addExplanation("試合を敗北にする").
+                        addRequiredPermission("man10raid.current.lose").addExplanation("試合を敗北にする").
                         setExecutor(new LoseCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("rejoin"))
+
+
+                        .addRequiredPermission("man10raid.current.rejoin").addExplanation("試合に再参加する").
+                        setExecutor(new ReJoinGameCommand(plugin))
         );
     }
 

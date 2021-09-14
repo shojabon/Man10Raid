@@ -27,7 +27,8 @@ public class FinishState extends RaidStateData {
     @Override
     public void start() {
         timerTillNextState.start();
-        Bukkit.getServer().broadcastMessage("started finish state");
+
+
 
     }
 

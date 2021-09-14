@@ -6,3 +6,7 @@ mysql:
   db: man10_shop
 
 prefix: "§6[§cMan10Raid§6]"
+
+servers:
+  raid: "raid"
+  main: "main"

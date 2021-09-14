@@ -228,6 +228,9 @@ public class InGameState extends RaidStateData {
 
     @EventHandler
     public void playerQuit(PlayerQuitEvent e){
+        RaidPlayer originPlayer = raid.getPlayer(e.getPlayer().getUniqueId());
+        if(originPlayer == null) return;
+        originPlayer.saveInventoryState();
         raid.removeOneLife(e.getPlayer().getUniqueId(), true);
     }
 
