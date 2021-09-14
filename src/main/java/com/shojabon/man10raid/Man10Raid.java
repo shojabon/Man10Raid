@@ -7,6 +7,7 @@ import com.shojabon.man10raid.Utils.MySQL.ThreadedMySQLAPI;
 import com.shojabon.man10raid.Utils.SInventory.SInventory;
 import com.shojabon.man10raid.Utils.STimer;
 import com.shojabon.man10raid.Utils.SWhiteList;
+import com.shojabon.man10raid.Utils.VaultAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -47,6 +48,8 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
 
     public static SWhiteList whitelist;
 
+    public static VaultAPI vault;
+
 
     @Override
     public void onEnable() {
@@ -65,6 +68,8 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
         Man10RaidCommand command = new Man10RaidCommand(this);
         getCommand("mraid").setExecutor(command);
         getCommand("mraid").setTabCompleter(command);
+
+        vault = new VaultAPI();
 
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getPluginManager().registerEvents(this, this);

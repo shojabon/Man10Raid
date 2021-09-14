@@ -43,6 +43,14 @@ public class RaidGame {
     public int endAreaTime = 0;
 
 
+    //payout settings
+    public double totalDamagePayoutMultiplier = 0;
+    public double totalProjectileDamagePayoutMultiplier = 0;
+    public double totalHealPayoutMultiplier = 0;
+    public double totalFriendlyFirePayoutMultiplier = 0;
+
+
+
     //location settings
     public ArrayList<Location> playerSpawnPoints = new ArrayList<>();
     public Location endArea = null;
@@ -75,12 +83,20 @@ public class RaidGame {
         inGameTime = config.getInt("time.inGame");
         endAreaTime = config.getInt("time.endArea");
 
-
+        //locations
         playerSpawnPoints = (ArrayList<Location>) config.getList("locations.playerSpawn", new ArrayList<Location>());
         respawnLocation = config.getLocation("locations.playerRespawn");
         endArea = config.getLocation("locations.endArea");
 
+        //payout
 
+        totalDamagePayoutMultiplier = config.getDouble("payout.totalDamage");
+        totalProjectileDamagePayoutMultiplier = config.getDouble("payout.totalProjectileDamage");
+        totalHealPayoutMultiplier = config.getDouble("payout.totalHeal");
+        totalFriendlyFirePayoutMultiplier = config.getDouble("payout.totalFriendlyFire");
+
+
+        //settings
         friendlyFire = config.getBoolean("settings.friendlyFire");
         revivesAllowed = config.getInt("settings.revivesAllowed");
         playersAllowed = config.getInt("settings.playersAllowed");
@@ -313,6 +329,18 @@ public class RaidGame {
             p.teleport(playerSpawnPoints.get(0));
         }else{
             p.teleport(respawnLocation);
+        }
+    }
+
+    public void payOutToPlayers(int game){
+        ArrayList<RaidPlayer> players = getPlayersInGame(game);
+        for(RaidPlayer player: players){
+            if(!player.getPlayer().isOnline()) continue;
+            long money = (long) (player.totalDamage * totalDamagePayoutMultiplier +
+                                player.totalProjectileDamage * totalProjectileDamagePayoutMultiplier +
+                                player.totalHeal * totalHealPayoutMultiplier +
+                                player.totalFriendlyDamage * totalFriendlyFirePayoutMultiplier);
+            Man10Raid.vault.deposit(player.uuid, money);
         }
     }
 

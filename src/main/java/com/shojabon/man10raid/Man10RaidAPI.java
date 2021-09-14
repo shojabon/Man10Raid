@@ -51,12 +51,18 @@ public class Man10RaidAPI {
         config.set("locations.playerRespawn", game.respawnLocation);
         config.set("locations.endArea", game.endArea);
 
-
+        //settings
         config.set("settings.friendlyFire", game.friendlyFire);
         config.set("settings.revivesAllowed", game.revivesAllowed);
         config.set("settings.playersAllowed", game.playersAllowed);
         config.set("settings.maxPlayersAllowed", game.maxPlayersAllowed);
         config.set("settings.minimumPlayersToBegin", game.minimumPlayersToBegin);
+
+        //payout
+        config.set("payout.totalDamage", game.totalDamagePayoutMultiplier);
+        config.set("payout.totalProjectileDamage", game.totalProjectileDamagePayoutMultiplier);
+        config.set("payout.totalHeal", game.totalHealPayoutMultiplier);
+        config.set("payout.totalFriendlyFire", game.totalFriendlyFirePayoutMultiplier);
 
         //file check
         File customConfigFile = new File(plugin.getDataFolder() + File.separator + "games", game.gameName + ".yml");

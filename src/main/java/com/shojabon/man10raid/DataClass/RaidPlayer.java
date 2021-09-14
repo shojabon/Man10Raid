@@ -21,6 +21,8 @@ public class RaidPlayer {
     public int registeredGame = -1;
     public int livesLeft = 0;
 
+    public boolean paymentSuccess = false;
+
     //inventory states
     public HashMap<Integer, ItemStack> inventoryState = new HashMap<>();
     public HashMap<Integer, ItemStack> armorState = new HashMap<>();
@@ -33,6 +35,8 @@ public class RaidPlayer {
     public Player getPlayer(){
         return Bukkit.getServer().getPlayer(uuid);
     }
+
+
 
     //inventory functions
 

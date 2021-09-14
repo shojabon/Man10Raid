@@ -5,6 +5,7 @@ import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.DataClass.RaidStateData;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.Man10RaidAPI;
 import com.shojabon.man10raid.Utils.SScoreboard;
 import com.shojabon.man10raid.Utils.STimer;
 import org.bukkit.Bukkit;
@@ -28,7 +29,29 @@ public class FinishState extends RaidStateData {
     public void start() {
         timerTillNextState.start();
 
+        //raid results
 
+        if(raid.won){
+            Man10RaidAPI.broadcastHighlightedMessage("§c§l勝利");
+        }else{
+            Man10RaidAPI.broadcastHighlightedMessage("§b§l敗北");
+        }
+
+        for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
+            Player p = player.getPlayer();
+            if(!p.isOnline()) continue;
+            p.sendMessage("§e§l==============[結果発表]==============");
+            p.sendMessage("");
+            p.sendMessage("§a§l総ダメージ数: §e§l" + player.totalDamage);
+            p.sendMessage("§a§l総プロジェクタイルダメージ数: §e§l" + player.totalProjectileDamage);
+            p.sendMessage("§a§l総ヒール数: §e§l" + player.totalHeal);
+            p.sendMessage("");
+            p.sendMessage("§e§l===================================");
+        }
+
+        if(raid.won){
+            raid.payOutToPlayers(raid.currentGame);
+        }
 
     }
 
