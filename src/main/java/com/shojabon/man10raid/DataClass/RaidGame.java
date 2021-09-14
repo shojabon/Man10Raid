@@ -6,6 +6,7 @@ import com.shojabon.man10raid.DataClass.States.PreparationState;
 import com.shojabon.man10raid.DataClass.States.RegisteringState;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.Utils.MySQL.MySQLAPI;
 import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,6 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,6 +44,8 @@ public class RaidGame {
     public int inGameTime = 0;
     public int endAreaTime = 0;
 
+    //live time counter
+    public int inGameTimeLeft = 0;
 
     //payout settings
     public double totalDamagePayoutMultiplier = 0;
@@ -108,6 +112,7 @@ public class RaidGame {
         if(selection == null) return;
         for(String key: selection.getKeys(false)){
             try{
+                System.out.println(key);
                 commands.put(RaidState.valueOf(key), new ArrayList<>(selection.getStringList(key)));
             }catch (Exception e){
 
@@ -340,8 +345,35 @@ public class RaidGame {
                                 player.totalProjectileDamage * totalProjectileDamagePayoutMultiplier +
                                 player.totalHeal * totalHealPayoutMultiplier +
                                 player.totalFriendlyDamage * totalFriendlyFirePayoutMultiplier);
-            Man10Raid.vault.deposit(player.uuid, money);
+            player.prizeMoney = money;
+            if(Man10Raid.vault.deposit(player.uuid, money)){
+                player.paymentSuccess = true;
+            }
+
         }
+    }
+
+    public void logPlayersInGame(int game){
+        ArrayList<RaidPlayer> players = getPlayersInGame(game);
+        ArrayList<HashMap<String, Object>> payloads = new ArrayList<>();
+
+        for(RaidPlayer player: players){
+            HashMap<String, Object> localPayload = new HashMap<>();
+            localPayload.put("game_id", gameId);
+            localPayload.put("game_registered_match", player.registeredGame);
+            localPayload.put("name", player.name);
+            localPayload.put("uuid", player.uuid);
+            localPayload.put("total_damage", player.totalDamage);
+            localPayload.put("total_friendly_damage", player.totalFriendlyDamage);
+            localPayload.put("total_projectile_damage", player.totalProjectileDamage);
+            localPayload.put("total_heal", player.totalHeal);
+            localPayload.put("payment_amount", player.prizeMoney);
+            localPayload.put("won", won);
+            localPayload.put("payment_success", player.paymentSuccess);
+            payloads.add(localPayload);
+        }
+
+        Man10Raid.mysql.futureExecute(MySQLAPI.buildInsertQuery(payloads, "raid_player_log"));
     }
 
 
@@ -437,6 +469,17 @@ public class RaidGame {
         return result;
     }
 
+    //logging functions
+
+    public void logCurrentMatch(){
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("game_id", gameId);
+        payload.put("game_match", currentGame);
+        payload.put("won", won);
+        payload.put("game_time", (inGameTime - inGameTimeLeft));
+
+        Man10Raid.mysql.futureExecute(MySQLAPI.buildInsertQuery(payload, "raid_game_log"));
+    }
 
 
 

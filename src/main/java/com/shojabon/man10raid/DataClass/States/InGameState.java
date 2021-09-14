@@ -97,6 +97,7 @@ public class InGameState extends RaidStateData {
         scoreboard.setTitle("§4§lMan10Raid");
         scoreboard.setText(0, "§c§l試合中");
         timerTillNextState.addOnIntervalEvent(e -> {
+            raid.inGameTimeLeft = e;
             scoreboard.setText(1, "§a§l総合ダメージ量: §e§l" + totalDamage);
             scoreboard.setText(2, "§a§l総合回復量: §e§l" + totalHeal);
             scoreboard.setText(3, "§a§l総合弓ダメージ: §e§l" + totalProjectileDamage);

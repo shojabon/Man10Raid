@@ -3,6 +3,7 @@ package com.shojabon.man10raid.Commands;
 
 import com.shojabon.man10raid.Commands.SubCommands.*;
 import com.shojabon.man10raid.Commands.SubCommands.Config.AddArenaPlayerSpawnPointCommand;
+import com.shojabon.man10raid.Commands.SubCommands.Config.CreateNewPreset;
 import com.shojabon.man10raid.Commands.SubCommands.Config.SetArenaPlayerRespawnPointCommand;
 import com.shojabon.man10raid.Commands.SubCommands.Config.SetLobbyCommand;
 import com.shojabon.man10raid.Commands.SubCommands.CurrentGameCommand.*;
@@ -94,6 +95,17 @@ public class Man10RaidCommand extends SCommandRouter {
         //   arena configuration functions
         //
         //===========================
+
+        //create new preset
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("create")).
+                        addArgument(new SCommandArgument().addAlias("アリーナ名")).
+                        addRequiredPermission("man10raid.settings.create").addExplanation("新たにプリセットを作成する").
+                        setExecutor(new CreateNewPreset(plugin))
+        );
+
 
         //set lobby location
         addCommand(

@@ -6,6 +6,7 @@ import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.Man10RaidAPI;
 import com.shojabon.man10raid.Utils.SItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -33,21 +34,6 @@ public class TestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player p = ((Player) sender);
-
-        Enderman view = (Enderman) p.getWorld().spawnEntity(p.getLocation(), EntityType.ENDERMAN);
-        view.setAI(false);
-        view.setInvisible(true);
-
-        GameMode current = p.getGameMode();
-
-
-        p.setGameMode(GameMode.SPECTATOR);
-        p.setSpectatorTarget(view);
-
-        Bukkit.getScheduler().runTaskLater(plugin, ()->{
-            view.remove();
-            p.setGameMode(current);
-        }, 20*3);
 
         return true;
     }

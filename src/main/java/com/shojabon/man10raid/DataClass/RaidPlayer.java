@@ -1,5 +1,6 @@
 package com.shojabon.man10raid.DataClass;
 
+import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,7 @@ public class RaidPlayer {
     public int livesLeft = 0;
 
     public boolean paymentSuccess = false;
+    public long prizeMoney = 0;
 
     //inventory states
     public HashMap<Integer, ItemStack> inventoryState = new HashMap<>();
@@ -69,5 +71,6 @@ public class RaidPlayer {
         return true;
 
     }
+
 
 }

@@ -53,6 +53,10 @@ public class FinishState extends RaidStateData {
             raid.payOutToPlayers(raid.currentGame);
         }
 
+        //logging
+        raid.logPlayersInGame(raid.currentGame);
+        raid.logCurrentMatch();
+
     }
 
     @Override

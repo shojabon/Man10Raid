@@ -148,6 +148,22 @@ public class Man10RaidAPI {
                    continue;
                }
 
+               //dialog function
+               if(args[0].equalsIgnoreCase("dialog") && args.length >= 3 && BaseUtils.isInt(args[1])){
+                   StringBuilder dialogString = new StringBuilder();
+                   for(int i = 2; i < args.length; i++){
+                       dialogString.append(args[i]);
+                       dialogString.append(" ");
+                   }
+                   Man10RaidAPI.broadcastDialog(dialogString.toString(), Integer.parseInt(args[1]));
+                   try {
+                       Thread.sleep(1000L * Integer.parseInt(args[1]));
+                   } catch (InterruptedException e) {
+                       e.printStackTrace();
+                   }
+                   continue;
+               }
+
                //command function
                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), code));
            }
@@ -191,6 +207,29 @@ public class Man10RaidAPI {
         Bukkit.broadcastMessage(message);
         Bukkit.broadcastMessage("");
         Bukkit.broadcastMessage("§e§l=================================");
+    }
+
+    public static void broadcastDialog(String message, int seconds){
+        Man10Raid.threadPool.submit(() -> {
+            for(int i = 0; i < seconds*5; i++){
+                for(int ii = 0; ii < 25; ii++){
+                    Bukkit.broadcastMessage("");
+                }
+
+                Bukkit.broadcastMessage("§b=================================");
+                Bukkit.broadcastMessage("");
+                Bukkit.broadcastMessage(message);
+                Bukkit.broadcastMessage("");
+                Bukkit.broadcastMessage("§b=================================");
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
 
