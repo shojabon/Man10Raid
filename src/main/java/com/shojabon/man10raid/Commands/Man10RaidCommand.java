@@ -5,6 +5,7 @@ import com.shojabon.man10raid.Commands.SubCommands.*;
 import com.shojabon.man10raid.Commands.SubCommands.Config.AddArenaPlayerSpawnPointCommand;
 import com.shojabon.man10raid.Commands.SubCommands.Config.SetArenaPlayerRespawnPointCommand;
 import com.shojabon.man10raid.Commands.SubCommands.Config.SetLobbyCommand;
+import com.shojabon.man10raid.Commands.SubCommands.CurrentGameCommand.*;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgument;
 import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgumentType;
@@ -166,6 +167,14 @@ public class Man10RaidCommand extends SCommandRouter {
 
                         .addRequiredPermission("man10raid.current.rejoin").addExplanation("試合に再参加する").
                         setExecutor(new ReJoinGameCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("cancel"))
+
+                        .addRequiredPermission("man10raid.cancel").addExplanation("試合をキャンセルする").
+                        setExecutor(new EndCurrentGameCommand(plugin))
         );
     }
 

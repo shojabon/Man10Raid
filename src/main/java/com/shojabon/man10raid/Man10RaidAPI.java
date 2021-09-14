@@ -169,5 +169,23 @@ public class Man10RaidAPI {
         plugin.getServer().sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
     }
 
+    //text functions
+
+    public static void sendHighlightedMessage(Player p, String message){
+        p.sendMessage("§e§l=================================");
+        p.sendMessage("");
+        p.sendMessage(message);
+        p.sendMessage("");
+        p.sendMessage("§e§l=================================");
+    }
+
+    public static void broadcastHighlightedMessage(String message){
+        Bukkit.broadcastMessage("§e§l=================================");
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage(message);
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage("§e§l=================================");
+    }
+
 
 }

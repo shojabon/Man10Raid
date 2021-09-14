@@ -21,6 +21,10 @@ public class STimer {
     }
 
     Thread timerThread = new Thread(() -> {
+        //init interval
+        for(Consumer<Integer> event: onIntervalEvents){
+            event.accept(remainingTime);
+        }
         while(timerMoving && pluginEnabled){
             try {
                 Thread.sleep(1000);
@@ -76,11 +80,7 @@ public class STimer {
     }
 
     public void linkBossBar(BossBar bar, boolean countDown){
-        String originalTitle = bar.getTitle();
-        bar.setTitle(originalTitle.replace("{time}", String.valueOf(originalTime)));
         addOnIntervalEvent(remaining -> {
-            bar.setTitle(originalTitle.replace("{time}", String.valueOf(remaining)));
-
             double progress = (((double) remaining)-((double) originalTime))/((double) originalTime);
             if(countDown)progress = ((double) remaining)/((double) originalTime);
 
@@ -90,7 +90,6 @@ public class STimer {
         addOnEndEvent(() -> {
             double progress = 100;
             if(countDown) progress = 0;
-            bar.setTitle(originalTitle.replace("{time}", "0"));
             bar.setProgress(progress);
         });
     }

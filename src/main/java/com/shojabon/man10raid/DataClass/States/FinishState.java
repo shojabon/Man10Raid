@@ -63,20 +63,22 @@ public class FinishState extends RaidStateData {
 
     @Override
     public void defineBossBar() {
-        this.bar = Bukkit.createBossBar("終了フェーズ {time}秒", BarColor.WHITE, BarStyle.SOLID);
+        String title = "§c§l終了フェーズ §a§l残り§e§l{time}§a§l秒";
+        this.bar = Bukkit.createBossBar(title, BarColor.WHITE, BarStyle.SOLID);
         timerTillNextState.linkBossBar(bar, true);
+        timerTillNextState.addOnIntervalEvent(e -> bar.setTitle(title.replace("{time}", String.valueOf(e))));
     }
 
     @Override
     public void defineScoreboard() {
         scoreboard = new SScoreboard("TEST");
-        scoreboard.setTitle("終了!!");
+        scoreboard.setTitle("§c§lMan10Raid");
+        scoreboard.setText(0, "§c§l終了フェーズ");
         timerTillNextState.addOnIntervalEvent(e -> {
-            scoreboard.setText(0, "残り" + e + "秒");
+            scoreboard.setText(2, "§a§l残り§e§l" + e + "§a§l秒");
+
+            scoreboard.renderText();
         });
-        scoreboard.setText(1, "test2");
-        scoreboard.setText(3, "test4");
-        scoreboard.setText(2, "test3");
     }
 
 
@@ -84,7 +86,6 @@ public class FinishState extends RaidStateData {
     public void endAreaProcess(){
         endAreaTimer.setRemainingTime(raid.endAreaTime);
         endAreaTimer.addOnEndEvent(()->{
-            Bukkit.getServer().broadcastMessage("end area終了");
             endGameProcess();
         });
         endAreaTimer.start();

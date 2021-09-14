@@ -1,4 +1,4 @@
-package com.shojabon.man10raid.Commands.SubCommands;
+package com.shojabon.man10raid.Commands.SubCommands.CurrentGameCommand;
 
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.DataClass.RaidPlayer;

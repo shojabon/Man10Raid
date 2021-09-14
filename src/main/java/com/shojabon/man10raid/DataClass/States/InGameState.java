@@ -48,6 +48,8 @@ public class InGameState extends RaidStateData {
             return;
         }
 
+        Man10RaidAPI.broadcastHighlightedMessage("§a§lゲーム開始");
+
         Bukkit.getScheduler().runTask(plugin, this::movePlayersToArena);
         timerTillNextState.start();
     }
@@ -70,32 +72,38 @@ public class InGameState extends RaidStateData {
                 if(p == null) continue;
                 if(!p.isOnline()) continue;
                 if(player.livesLeft == 0) continue;
-                p.sendActionBar("総合ダメージ:" + player.totalDamage + " 総合回復:" + player.totalHeal + " 総合矢攻撃:" + player.totalProjectileDamage + " 残りライフ:" + player.livesLeft);
+                p.sendActionBar("§a§l総合ダメージ: §e§l" + player.totalDamage +
+                        " §a§l総合回復: §e§l" + player.totalHeal +
+                        " §a§l総合矢攻撃: §e§l" + player.totalProjectileDamage +
+                        " §a§l残りライフ: §e§l" + player.livesLeft);
             }
         });
         timerTillNextState.addOnEndEvent(() -> {
-            Bukkit.getServer().broadcastMessage("end!");
             endGame();
         });
     }
 
     @Override
     public void defineBossBar() {
-        this.bar = Bukkit.createBossBar("ゲーム終了まで 残り{time}秒", BarColor.WHITE, BarStyle.SOLID);
+        String title = "§c§l試合終了まで §a§l残り§e§l{time}§a§l秒";
+        this.bar = Bukkit.createBossBar(title, BarColor.WHITE, BarStyle.SOLID);
         timerTillNextState.linkBossBar(bar, true);
+        timerTillNextState.addOnIntervalEvent(e -> bar.setTitle(title.replace("{time}", String.valueOf(e))));
     }
 
     @Override
     public void defineScoreboard() {
         scoreboard = new SScoreboard("TEST");
-        scoreboard.setTitle("試合中!!");
-        ArrayList<RaidPlayer> players = raid.getPlayersInGame(raid.currentGame);
+        scoreboard.setTitle("§4§lMan10Raid");
+        scoreboard.setText(0, "§c§l試合中");
         timerTillNextState.addOnIntervalEvent(e -> {
-            scoreboard.setText(0, "残り" + e + "秒");
-            scoreboard.setText(1, "総合ダメージ量:" + totalDamage);
-            scoreboard.setText(2, "総合回復量:" + totalHeal);
-            scoreboard.setText(3, "総合弓ダメージ" + totalProjectileDamage);
-            scoreboard.setText(3, "総ライフ数: " + raid.allLivesLeftInCurrentGame());
+            scoreboard.setText(1, "§a§l総合ダメージ量: §e§l" + totalDamage);
+            scoreboard.setText(2, "§a§l総合回復量: §e§l" + totalHeal);
+            scoreboard.setText(3, "§a§l総合弓ダメージ: §e§l" + totalProjectileDamage);
+            scoreboard.setText(4, "§a§l総ライフ数: §e§l" + raid.allLivesLeftInCurrentGame());
+            scoreboard.setText(6, "§a§l残り§e§l" + e + "§a§l秒");
+
+            scoreboard.renderText();
         });
     }
 

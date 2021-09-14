@@ -55,7 +55,6 @@ public class SScoreboard {
     public void setText(int lineNumber, String text){
         displayText.set(lineNumber, text);
         if(lineNumber > maxLineIndex) maxLineIndex = lineNumber;
-        renderText();
     }
 
     public void renderText(){
