@@ -21,7 +21,7 @@ payout:
   totalFriendlyFire: -1
 
 commands:
-  REGISTRACTION:
+  REGISTERING:
     - say test
     - sleep 5
     - say test2

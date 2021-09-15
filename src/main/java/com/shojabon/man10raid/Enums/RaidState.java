@@ -6,5 +6,4 @@ public enum RaidState {
     PREPARATION,
     IN_GAME,
     FINISH,
-    PLAYER_TRANSFER
 }

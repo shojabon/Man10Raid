@@ -76,17 +76,32 @@ public class Man10RaidCommand extends SCommandRouter {
                         setExecutor(new TestCommand(plugin))
         );
 
+
+        //vision command
+
         addCommand(
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("vision"))
-
                         .addArgument(new SCommandArgument().addAlias("モブタイプ")
                                 .addAllowedString("creeper")
                                 .addAllowedString("spider")
                                 .addAllowedString("enderman")
                         )
 
-                        .addRequiredPermission("man10raid.vision").addExplanation("visionテスト").
+                        .addRequiredPermission("man10raid.vision").addExplanation("vision").
+                        setExecutor(new VisionCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("vision"))
+                        .addArgument(new SCommandArgument().addAlias("モブタイプ")
+                                .addAllowedString("creeper")
+                                .addAllowedString("spider")
+                                .addAllowedString("enderman")
+                        )
+                        .addArgument(new SCommandArgument().addAlias("プレイヤー名").addAllowedType(SCommandArgumentType.ONLINE_PLAYER))
+                        .addRequiredPermission("man10raid.vision").addExplanation("vision").
                         setExecutor(new VisionCommand(plugin))
         );
 
