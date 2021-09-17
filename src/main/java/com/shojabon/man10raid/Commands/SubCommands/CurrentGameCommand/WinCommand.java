@@ -28,6 +28,11 @@ public class WinCommand implements CommandExecutor {
             sender.sendMessage(Man10Raid.prefix + "§c§l現在試合中ではありません");
             return true;
         }
+        raid.executedWinCommandCount ++;
+        if(raid.executedWinCommandCount < raid.neededWinCommand){
+            sender.sendMessage(Man10Raid.prefix + "§c§lもう" + (raid.neededWinCommand - raid.executedWinCommandCount) + "回勝利コマンドを発行してください");
+            return true;
+        }
         raid.won = true;
         raid.setGameState(RaidState.FINISH);
         return true;

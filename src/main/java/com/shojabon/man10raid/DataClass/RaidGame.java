@@ -31,6 +31,9 @@ public class RaidGame {
 
     // raid settings
 
+    public int neededWinCommand = 1;
+    public int executedWinCommandCount = 0;
+
     public UUID gameId;
 
     public String gameName;
@@ -106,6 +109,7 @@ public class RaidGame {
         playersAllowed = config.getInt("settings.playersAllowed");
         minimumPlayersToBegin = config.getInt("settings.minimumPlayersToBegin");
         maxPlayersAllowed = config.getInt("settings.maxPlayersAllowed");
+        neededWinCommand = config.getInt("settings.neededWinCommand");
 
         //load commands
         ConfigurationSection selection = config.getConfigurationSection("commands");

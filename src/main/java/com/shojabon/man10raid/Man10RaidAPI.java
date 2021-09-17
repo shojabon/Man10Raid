@@ -57,6 +57,7 @@ public class Man10RaidAPI {
         config.set("settings.playersAllowed", game.playersAllowed);
         config.set("settings.maxPlayersAllowed", game.maxPlayersAllowed);
         config.set("settings.minimumPlayersToBegin", game.minimumPlayersToBegin);
+        config.set("settings.neededWinCommand", game.neededWinCommand);
 
         //payout
         config.set("payout.totalDamage", game.totalDamagePayoutMultiplier);

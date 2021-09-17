@@ -42,6 +42,9 @@ public class InGameState extends RaidStateData {
     @Override
     public void start() {
         //if no spawn points
+
+        raid.executedWinCommandCount = 0;
+
         if(raid.playerSpawnPoints.size() == 0){
             Bukkit.getServer().broadcastMessage(Man10Raid.prefix + "スポーンポイントを発見することができませんでした");
             Man10Raid.api.endGame();
@@ -243,4 +246,16 @@ public class InGameState extends RaidStateData {
         raid.removeOneLife(e.getPlayer().getUniqueId(), true);
     }
 
+    //on arrow hit block
+    @EventHandler
+    public void onArrowHitRock(ProjectileHitEvent e){
+        if(e.getHitBlock() == null) return;
+        e.getEntity().remove();
+    }
+
+    @EventHandler
+    public void onGlide(EntityToggleGlideEvent e){
+        if(!(e.getEntity() instanceof Player)) return;
+        e.setCancelled(true);
+    }
 }

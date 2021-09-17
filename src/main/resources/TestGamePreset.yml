@@ -13,6 +13,7 @@ settings:
   playersAllowed: 100
   maxPlayersAllowed: 105
   minimumPlayersToBegin: 10
+  neededWinCommand: 1
 
 payout:
   totalDamage: 1

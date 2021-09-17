@@ -8,28 +8,29 @@ import com.shojabon.man10raid.Utils.SInventory.SInventory;
 import com.shojabon.man10raid.Utils.STimer;
 import com.shojabon.man10raid.Utils.SWhiteList;
 import com.shojabon.man10raid.Utils.VaultAPI;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.text.html.parser.Entity;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -125,6 +126,28 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
                 "ENGINE=InnoDB\n" +
                 ";\n");
     }
+//
+//    @EventHandler
+//    public void test(InventoryClickEvent e){
+//        if(e.getSlotType() != InventoryType.SlotType.ARMOR && e.getRawSlot() != 5) return;
+//        if(e.getCursor() == null) return;
+//        if(e.getCursor().getType() == Material.AIR) return;
+//        e.setCancelled(true);
+//
+//        ItemStack[] items = e.getWhoClicked().getInventory().getArmorContents();
+//        ArrayUtils.reverse(items);
+//
+//        ItemStack originalItem = items[e.getRawSlot()-5];
+//        items[e.getRawSlot()-5] = e.getCursor().clone();
+//        ArrayUtils.reverse(items);
+//
+//        if(originalItem == null) originalItem = new ItemStack(Material.AIR);
+//        e.getWhoClicked().setItemOnCursor(originalItem.clone());
+//        e.getWhoClicked().getInventory().setArmorContents(items.clone());
+//
+//
+//    }
+
 
 
 }

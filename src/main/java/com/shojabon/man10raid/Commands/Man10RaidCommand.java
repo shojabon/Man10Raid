@@ -105,6 +105,16 @@ public class Man10RaidCommand extends SCommandRouter {
                         setExecutor(new VisionCommand(plugin))
         );
 
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("radiusExecute"))
+                        .addArgument(new SCommandArgument().addAlias("モブUUID"))
+                        .addArgument(new SCommandArgument().addAlias("半径").addAllowedType(SCommandArgumentType.INT))
+                        .setInfinity()
+                        .addRequiredPermission("man10raid.radiusExecute").addExplanation("指定モブの範囲内のプレイヤーの名前を代入してコマンドを発行\n<name> プレイヤー名\n<uuid> プレイヤーUUID").
+                        setExecutor(new RadiusExecute(plugin))
+        );
+
         //===========================
         //
         //   arena configuration functions

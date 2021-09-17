@@ -10,3 +10,5 @@ prefix: "§6[§cMan10Raid§6]"
 servers:
   raid: "raid"
   main: "main"
+
+arenaWorld: "arena"

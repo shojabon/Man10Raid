@@ -80,6 +80,7 @@ public class PreparationState extends RaidStateData {
 
         //move players to raid server
         for(RaidPlayer player: currentGamePlayers){
+            if(player.getPlayer() != null && player.getPlayer().isOnline()) continue;
             Man10Raid.api.sendPlayerToServer(player.name, Man10Raid.config.getString("servers.raid"));
         }
 

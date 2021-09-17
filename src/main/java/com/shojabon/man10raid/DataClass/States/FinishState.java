@@ -39,6 +39,7 @@ public class FinishState extends RaidStateData {
 
         for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
             Player p = player.getPlayer();
+            if(p == null) continue;
             if(!p.isOnline()) continue;
             p.sendMessage("§e§l==============[結果発表]==============");
             p.sendMessage("");
