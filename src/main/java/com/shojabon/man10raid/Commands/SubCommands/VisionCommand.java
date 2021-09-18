@@ -19,7 +19,7 @@ public class VisionCommand implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    ArrayList<UUID> playerInVision = new ArrayList<>();
+    public static ArrayList<UUID> playerInVision = new ArrayList<>();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

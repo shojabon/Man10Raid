@@ -1,6 +1,7 @@
 package com.shojabon.man10raid;
 
 import com.shojabon.man10raid.Commands.Man10RaidCommand;
+import com.shojabon.man10raid.Commands.SubCommands.VisionCommand;
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.Utils.MySQL.ThreadedMySQLAPI;
@@ -10,6 +11,7 @@ import com.shojabon.man10raid.Utils.SWhiteList;
 import com.shojabon.man10raid.Utils.VaultAPI;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,10 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -89,7 +88,18 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
         e.getPlayer().teleport(Man10Raid.lobbyLocation);
+    }
 
+    @EventHandler
+    public void getOutOfSpectator(PlayerToggleSneakEvent e){
+        if(!VisionCommand.playerInVision.contains(e.getPlayer().getUniqueId())) return;
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onLeaveSpectator(PlayerQuitEvent e){
+        if(!VisionCommand.playerInVision.contains(e.getPlayer().getUniqueId())) return;
+        e.getPlayer().setGameMode(GameMode.SURVIVAL);
     }
 
     public void createTables(){
@@ -147,7 +157,5 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
 //
 //
 //    }
-
-
 
 }
