@@ -3,15 +3,18 @@ package com.shojabon.man10raid.Commands.SubCommands.CurrentGameCommand;
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.Utils.BaseUtils;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SetCurrentGameStateCommand implements CommandExecutor {
+public class SetCurrentStateTimeCommand implements CommandExecutor {
     Man10Raid plugin;
 
-    public SetCurrentGameStateCommand(Man10Raid plugin){
+    public SetCurrentStateTimeCommand(Man10Raid plugin){
         this.plugin = plugin;
     }
 
@@ -22,12 +25,12 @@ public class SetCurrentGameStateCommand implements CommandExecutor {
             sender.sendMessage(Man10Raid.prefix + "§c§l現在試合が行われていません");
             return true;
         }
-        try{
-            raid.setGameState(RaidState.valueOf(args[2]));
-        }catch (Exception e){
-            e.printStackTrace();
+        if(!BaseUtils.isInt(args[2])){
+            sender.sendMessage(Man10Raid.prefix + "§c§l時間は数字でなくてはなりません");
+            return true;
         }
-        sender.sendMessage(Man10Raid.prefix + "§a§l状態をセットしました");
+        raid.currentGameStateData.timerTillNextState.setRemainingTime(Integer.parseInt(args[2]));
+        sender.sendMessage(Man10Raid.prefix + "§a§l時間を設定しました");
         return true;
     }
 }

@@ -82,6 +82,7 @@ public class Man10RaidCommand extends SCommandRouter {
         addCommand(
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("vision"))
+                        .addArgument(new SCommandArgument().addAlias("秒").addAllowedType(SCommandArgumentType.INT))
                         .addArgument(new SCommandArgument().addAlias("モブタイプ")
                                 .addAllowedString("creeper")
                                 .addAllowedString("spider")
@@ -95,6 +96,7 @@ public class Man10RaidCommand extends SCommandRouter {
         addCommand(
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("vision"))
+                        .addArgument(new SCommandArgument().addAlias("秒").addAllowedType(SCommandArgumentType.INT))
                         .addArgument(new SCommandArgument().addAlias("モブタイプ")
                                 .addAllowedString("creeper")
                                 .addAllowedString("spider")
@@ -173,8 +175,12 @@ public class Man10RaidCommand extends SCommandRouter {
         addCommand(
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("current"))
-                        .addArgument(new SCommandArgument().addAllowedString("setstate")).
-                        addArgument(new SCommandArgument().addAlias("状態")).
+                        .addArgument(new SCommandArgument().addAllowedString("setState"))
+                        .addArgument(new SCommandArgument().addAlias("状態")
+                                .addAllowedString("REGISTERING")
+                                .addAllowedString("PREPARATION")
+                                .addAllowedString("IN_GAME")
+                                .addAllowedString("FINISH")).
 
                         addRequiredPermission("man10raid.current.state").addExplanation("試合の状態を設定する").
                         setExecutor(new SetCurrentGameStateCommand(plugin))
@@ -212,6 +218,17 @@ public class Man10RaidCommand extends SCommandRouter {
 
                         .addRequiredPermission("man10raid.cancel").addExplanation("試合をキャンセルする").
                         setExecutor(new EndCurrentGameCommand(plugin))
+        );
+
+        //extend time
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("current"))
+                        .addArgument(new SCommandArgument().addAllowedString("setTime"))
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.INT))
+
+                        .addRequiredPermission("man10raid.current.time.extend").addExplanation("試合時間を延長する").
+                        setExecutor(new SetCurrentStateTimeCommand(plugin))
         );
     }
 

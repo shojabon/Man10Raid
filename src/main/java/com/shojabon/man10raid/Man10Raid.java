@@ -102,6 +102,12 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
         e.getPlayer().setGameMode(GameMode.SURVIVAL);
     }
 
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e){
+        if(e.getPlayer().hasPermission("man10raid.admin")) return;
+        e.setCancelled(true);
+    }
+
     public void createTables(){
         mysql.futureExecute("CREATE TABLE IF NOT EXISTS `raid_player_log` (\n" +
                 "\t`id` INT(10) NOT NULL AUTO_INCREMENT,\n" +
@@ -156,6 +162,11 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
 //        e.getWhoClicked().getInventory().setArmorContents(items.clone());
 //
 //
+//    }
+//
+//    @EventHandler
+//    public void onMove(PlayerMoveEvent e){
+//        Bukkit.broadcastMessage(e.getPlayer().getName() + " " + e.getPlayer().getVelocity().getX() + " " + e.getPlayer().getVelocity().getY() + " " + e.getPlayer().getVelocity().getZ());
 //    }
 
 }

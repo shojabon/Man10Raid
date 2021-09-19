@@ -3,10 +3,12 @@ package com.shojabon.man10raid.Commands.SubCommands;
 import com.shojabon.man10raid.Man10Raid;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -24,9 +26,9 @@ public class VisionCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player p;
-        if(args.length == 3){
-            p = Bukkit.getPlayer(args[2]);
-            if(p == null || !p.isOnline() || !p.getName().equals(args[2])){
+        if(args.length == 4){
+            p = Bukkit.getPlayer(args[3]);
+            if(p == null || !p.isOnline() || !p.getName().equals(args[3])){
                 sender.sendMessage(Man10Raid.prefix + "§c§lプレイヤーが存在しません");
                 return false;
             }
@@ -38,31 +40,44 @@ public class VisionCommand implements CommandExecutor {
             sender.sendMessage(Man10Raid.prefix + "§c§lプレイヤーはすでにエフェクト付与中です");
             return false;
         }
+        playerInVision.add(p.getUniqueId());
 
         Monster view = null;
-        if(args[1].equalsIgnoreCase("creeper")) view = (Creeper) p.getWorld().spawnEntity(p.getLocation(), EntityType.CREEPER);
-        if(args[1].equalsIgnoreCase("enderman")) view = (Enderman) p.getWorld().spawnEntity(p.getLocation(), EntityType.ENDERMAN);
-        if(args[1].equalsIgnoreCase("spider")) view = (Spider) p.getWorld().spawnEntity(p.getLocation(), EntityType.SPIDER);
+
+
+        if(args[2].equalsIgnoreCase("creeper")) view = (Creeper) p.getWorld().spawnEntity(p.getLocation(), EntityType.CREEPER);
+        if(args[2].equalsIgnoreCase("enderman")) view = (Enderman) p.getWorld().spawnEntity(p.getLocation(), EntityType.ENDERMAN);
+        if(args[2].equalsIgnoreCase("spider")) view = (Spider) p.getWorld().spawnEntity(p.getLocation(), EntityType.SPIDER);
 
         if(view == null) return false;
 
-        view.setAI(false);
-        view.setInvisible(true);
-
-        GameMode current = p.getGameMode();
-
-
-        p.setGameMode(GameMode.SPECTATOR);
-        p.setSpectatorTarget(view);
-
+        if(view instanceof Creeper) {
+            ((Creeper) view).setMaxFuseTicks(1000);
+        };
         Monster finalView = view;
+        finalView.setInvisible(true);
+        finalView.setSilent(true);
+        finalView.setInvulnerable(true);
+        finalView.teleport(p.getLocation());
 
-        playerInVision.add(p.getUniqueId());
-        Bukkit.getScheduler().runTaskLater(plugin, ()->{
-            finalView.remove();
-            p.setGameMode(current);
-            playerInVision.remove(p.getUniqueId());
-        }, 20*3);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Location pastLocation = p.getLocation();
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                Vector directionVector = p.getLocation().subtract(pastLocation).toVector();
+                if(directionVector.length() != 0) finalView.setVelocity(directionVector.normalize().multiply(Math.sqrt(pastLocation.distance(p.getLocation()))));                finalView.setAware(false);
+
+                GameMode current = p.getGameMode();
+
+                p.setGameMode(GameMode.SPECTATOR);
+                p.setSpectatorTarget(finalView);
+
+                Bukkit.getScheduler().runTaskLater(plugin, ()->{
+                    p.setGameMode(current);
+                    finalView.remove();
+                    playerInVision.remove(p.getUniqueId());
+                }, 20L *Integer.parseInt(args[1]));
+            }, 2);
+        }, 1);
 
         return true;
     }

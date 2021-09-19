@@ -291,10 +291,11 @@ public class RaidGame {
     public void removeOneLife(UUID uuid, boolean playerLeft){
         RaidPlayer deadPlayer = getPlayer(uuid);
         if(deadPlayer == null) return;
+        if(deadPlayer.livesLeft <= 0) return;
         deadPlayer.livesLeft --;
         Player p = deadPlayer.getPlayer();
         if(p.isOnline() && !playerLeft){
-            if(deadPlayer.livesLeft != 0) {
+            if(deadPlayer.livesLeft > 0) {
                 //player still can play in arena
                 if(respawnLocation == null){
                     //no respawn point

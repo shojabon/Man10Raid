@@ -83,6 +83,8 @@ public class STimer {
         addOnIntervalEvent(remaining -> {
             double progress = (((double) remaining)-((double) originalTime))/((double) originalTime);
             if(countDown)progress = ((double) remaining)/((double) originalTime);
+            if(progress > 1) progress = 1;
+            if(progress < 0) progress = 0;
 
             bar.setProgress(progress);
         });
