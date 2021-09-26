@@ -1,7 +1,7 @@
 package com.shojabon.man10raid.DataClass;
 
-import com.shojabon.man10raid.Utils.SScoreboard;
-import com.shojabon.man10raid.Utils.STimer;
+import com.shojabon.mcutils.Utils.SScoreboard;
+import com.shojabon.mcutils.Utils.STimer;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;

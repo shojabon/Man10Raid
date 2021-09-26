@@ -6,7 +6,7 @@ import com.shojabon.man10raid.DataClass.States.PreparationState;
 import com.shojabon.man10raid.DataClass.States.RegisteringState;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
-import com.shojabon.man10raid.Utils.MySQL.MySQLAPI;
+import com.shojabon.mcutils.Utils.MySQL.MySQLAPI;
 import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -198,7 +198,7 @@ public class RaidGame {
 
 
         int maxGames = players.size()/playersAllowed;
-        if(maxGames == 0) maxGames = 1;
+        if(players.size()%playersAllowed != 0) maxGames++;
 
         if(maxGames > scheduledGames && scheduledGames != -1) maxGames = scheduledGames; //if maxGames bigger than scheduled games and not all player game
         if(scheduledGames > maxGames) scheduledGames = maxGames; // if scheduled games is too many games for the amount of players

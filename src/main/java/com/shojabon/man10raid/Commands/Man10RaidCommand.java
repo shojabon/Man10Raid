@@ -8,10 +8,10 @@ import com.shojabon.man10raid.Commands.SubCommands.Config.SetArenaPlayerRespawnP
 import com.shojabon.man10raid.Commands.SubCommands.Config.SetLobbyCommand;
 import com.shojabon.man10raid.Commands.SubCommands.CurrentGameCommand.*;
 import com.shojabon.man10raid.Man10Raid;
-import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgument;
-import com.shojabon.man10raid.Utils.SCommandRouter.SCommandArgumentType;
-import com.shojabon.man10raid.Utils.SCommandRouter.SCommandObject;
-import com.shojabon.man10raid.Utils.SCommandRouter.SCommandRouter;
+import com.shojabon.mcutils.Utils.SCommandRouter.SCommandArgument;
+import com.shojabon.mcutils.Utils.SCommandRouter.SCommandArgumentType;
+import com.shojabon.mcutils.Utils.SCommandRouter.SCommandObject;
+import com.shojabon.mcutils.Utils.SCommandRouter.SCommandRouter;
 
 public class Man10RaidCommand extends SCommandRouter {
 
@@ -69,9 +69,6 @@ public class Man10RaidCommand extends SCommandRouter {
         addCommand(
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("test"))
-                        .addArgument(new SCommandArgument().addAlias("name"))
-                        .addArgument(new SCommandArgument().addAlias("server"))
-
                         .addRequiredPermission("man10raid.test").addExplanation("テストコマンド").
                         setExecutor(new TestCommand(plugin))
         );

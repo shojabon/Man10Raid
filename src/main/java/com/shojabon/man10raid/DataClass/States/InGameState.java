@@ -6,7 +6,7 @@ import com.shojabon.man10raid.DataClass.RaidStateData;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.man10raid.Man10RaidAPI;
-import com.shojabon.man10raid.Utils.SScoreboard;
+import com.shojabon.mcutils.Utils.SScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -118,6 +118,7 @@ public class InGameState extends RaidStateData {
 
     public void movePlayersToArena(){
         for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
+            if(player.getPlayer() == null) continue;
             int spawnIndex = new Random().nextInt(raid.playerSpawnPoints.size());
             player.getPlayer().teleport(raid.playerSpawnPoints.get(spawnIndex));
         }

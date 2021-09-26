@@ -3,7 +3,7 @@ package com.shojabon.man10raid.Commands.SubCommands.CurrentGameCommand;
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
-import com.shojabon.man10raid.Utils.BaseUtils;
+import com.shojabon.mcutils.Utils.BaseUtils;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

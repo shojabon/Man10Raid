@@ -3,7 +3,7 @@ package com.shojabon.man10raid;
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.Enums.RaidState;
-import com.shojabon.man10raid.Utils.BaseUtils;
+import com.shojabon.mcutils.Utils.BaseUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;

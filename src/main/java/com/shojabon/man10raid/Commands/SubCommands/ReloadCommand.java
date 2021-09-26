@@ -2,7 +2,7 @@ package com.shojabon.man10raid.Commands.SubCommands;
 
 import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.Man10Raid;
-import com.shojabon.man10raid.Utils.MySQL.ThreadedMySQLAPI;
+import com.shojabon.mcutils.Utils.MySQL.ThreadedMySQLAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
