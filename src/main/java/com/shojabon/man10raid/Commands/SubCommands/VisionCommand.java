@@ -69,6 +69,7 @@ public class VisionCommand implements CommandExecutor {
                 GameMode current = p.getGameMode();
 
                 p.setGameMode(GameMode.SPECTATOR);
+                finalView.setRotation(p.getLocation().getYaw(),p.getLocation().getPitch());
                 p.setSpectatorTarget(finalView);
 
                 Bukkit.getScheduler().runTaskLater(plugin, ()->{
