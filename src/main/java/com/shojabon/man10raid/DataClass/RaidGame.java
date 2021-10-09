@@ -1,13 +1,9 @@
 package com.shojabon.man10raid.DataClass;
 
-import com.shojabon.man10raid.DataClass.States.FinishState;
-import com.shojabon.man10raid.DataClass.States.InGameState;
-import com.shojabon.man10raid.DataClass.States.PreparationState;
-import com.shojabon.man10raid.DataClass.States.RegisteringState;
+import com.shojabon.man10raid.DataClass.States.*;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.mcutils.Utils.MySQL.MySQLAPI;
-import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,9 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class RaidGame {
 
@@ -171,6 +165,8 @@ public class RaidGame {
                 return new InGameState();
             case FINISH:
                 return new FinishState();
+            case CONGRATULATIONS:
+                return new CongratulationsState();
         }
         return null;
     }

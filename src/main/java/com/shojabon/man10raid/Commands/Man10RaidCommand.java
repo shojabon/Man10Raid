@@ -2,10 +2,7 @@ package com.shojabon.man10raid.Commands;
 
 
 import com.shojabon.man10raid.Commands.SubCommands.*;
-import com.shojabon.man10raid.Commands.SubCommands.Config.AddArenaPlayerSpawnPointCommand;
-import com.shojabon.man10raid.Commands.SubCommands.Config.CreateNewPreset;
-import com.shojabon.man10raid.Commands.SubCommands.Config.SetArenaPlayerRespawnPointCommand;
-import com.shojabon.man10raid.Commands.SubCommands.Config.SetLobbyCommand;
+import com.shojabon.man10raid.Commands.SubCommands.Config.*;
 import com.shojabon.man10raid.Commands.SubCommands.CurrentGameCommand.*;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.mcutils.Utils.SCommandRouter.SCommandArgument;
@@ -159,6 +156,15 @@ public class Man10RaidCommand extends SCommandRouter {
                         addArgument(new SCommandArgument().addAllowedString("setRespawn")).
                         addRequiredPermission("man10raid.settings.arena.playerRespawn").addExplanation("アリーナのスポーンポイントを設定する").
                         setExecutor(new SetArenaPlayerRespawnPointCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("setting")).
+                        addArgument(new SCommandArgument().addAlias("アリーナ名")).
+                        addArgument(new SCommandArgument().addAllowedString("setEndArea")).
+                        addRequiredPermission("man10raid.settings.arena.endarea").addExplanation("エンドエリアを設定する").
+                        setExecutor(new SetArenaEndAreaCommand(plugin))
         );
 
 

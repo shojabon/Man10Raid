@@ -15,50 +15,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import java.util.ArrayList;
-
-public class FinishState extends RaidStateData {
+public class CongratulationsState extends RaidStateData {
 
     RaidGame raid = Man10Raid.api.currentGame;
 
     STimer endAreaTimer = new STimer();
-
-    boolean endAreaFinished = false;
 
 
 
     @Override
     public void start() {
         timerTillNextState.start();
-
-        //raid results
-
-        if(raid.won){
-            Man10RaidAPI.broadcastHighlightedMessage("§c§l勝利");
-        }else{
-            Man10RaidAPI.broadcastHighlightedMessage("§b§l敗北");
+        for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+            if(player.getPlayer() == null) continue;
+            if(!player.getPlayer().isOnline()) continue;
+            player.getPlayer().teleport(raid.endArea);
         }
-
-        for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
-            Player p = player.getPlayer();
-            if(p == null) continue;
-            if(!p.isOnline()) continue;
-            p.sendMessage("§e§l==============[結果発表]==============");
-            p.sendMessage("");
-            p.sendMessage("§a§l総ダメージ数: §e§l" + player.totalDamage);
-            p.sendMessage("§a§l総プロジェクタイルダメージ数: §e§l" + player.totalProjectileDamage);
-            p.sendMessage("§a§l総ヒール数: §e§l" + player.totalHeal);
-            p.sendMessage("");
-            p.sendMessage("§e§l===================================");
-        }
-
-        if(raid.won){
-            raid.payOutToPlayers(raid.currentGame);
-        }
-
-        //logging
-        raid.logPlayersInGame(raid.currentGame);
-        raid.logCurrentMatch();
 
     }
 
@@ -70,30 +42,13 @@ public class FinishState extends RaidStateData {
 
     @Override
     public void defineTimer(){
-        timerTillNextState.setRemainingTime(10);
-        timerTillNextState.addOnEndEvent(() -> {
-            if(raid.won){
-                //win process
-                Bukkit.getServer().broadcastMessage("勝利");
-                if(raid.endArea != null){
-                    //if end area exists
-                    raid.setGameState(RaidState.CONGRATULATIONS);
-                    return;
-                }
-            }else{
-                //lose process
-                Bukkit.getServer().broadcastMessage("敗北");
-            }
-
-            //final
-            endGameProcess();
-
-        });
+        timerTillNextState.setRemainingTime(raid.endAreaTime);
+        timerTillNextState.addOnEndEvent(this::endGameProcess);
     }
 
     @Override
     public void defineBossBar() {
-        String title = "§c§l終了フェーズ §a§l残り§e§l{time}§a§l秒";
+        String title = "§c§lおめでとうフェーズ §a§l残り§e§l{time}§a§l秒";
         this.bar = Bukkit.createBossBar(title, BarColor.WHITE, BarStyle.SOLID);
         timerTillNextState.linkBossBar(bar, true);
         timerTillNextState.addOnIntervalEvent(e -> bar.setTitle(title.replace("{time}", String.valueOf(e))));
@@ -103,22 +58,13 @@ public class FinishState extends RaidStateData {
     public void defineScoreboard() {
         scoreboard = new SScoreboard("TEST");
         scoreboard.setTitle("§c§lMan10Raid");
-        scoreboard.setText(0, "§c§l終了フェーズ");
+        scoreboard.setText(0, "§c§lおめでとうフェーズ");
         timerTillNextState.addOnIntervalEvent(e -> {
             scoreboard.setText(2, "§a§l残り§e§l" + e + "§a§l秒");
 
             scoreboard.renderText();
         });
     }
-
-
-    //winner area
-    public void endAreaProcess(){
-        timerTillNextState.setRemainingTime(raid.endAreaTime);
-        timerTillNextState.start();
-        endAreaFinished = true;
-    }
-
 
     public void endGameProcess(){
         if(raid.currentGame < raid.scheduledGames-1){
