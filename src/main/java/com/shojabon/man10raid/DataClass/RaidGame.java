@@ -196,8 +196,10 @@ public class RaidGame {
         int maxGames = players.size()/playersAllowed;
         if(players.size()%playersAllowed != 0) maxGames++;
 
-        if(maxGames > scheduledGames && scheduledGames != -1) maxGames = scheduledGames; //if maxGames bigger than scheduled games and not all player game
-        if(scheduledGames > maxGames) scheduledGames = maxGames; // if scheduled games is too many games for the amount of players
+        //if(maxGames > scheduledGames && scheduledGames > 0) maxGames = scheduledGames; //if maxGames bigger than scheduled games and not all player game
+
+
+        if(scheduledGames > maxGames || scheduledGames <= 0) scheduledGames = maxGames; // if scheduled games is too many games for the amount of players
 
         for(int game = 0; game < maxGames; game++){
 
