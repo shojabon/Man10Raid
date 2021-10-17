@@ -195,20 +195,17 @@ public class RaidGame {
 
         int maxGames = players.size()/playersAllowed;
         if(players.size()%playersAllowed != 0) maxGames++;
-
-        //if(maxGames > scheduledGames && scheduledGames > 0) maxGames = scheduledGames; //if maxGames bigger than scheduled games and not all player game
-
-
         if(scheduledGames > maxGames || scheduledGames <= 0) scheduledGames = maxGames; // if scheduled games is too many games for the amount of players
-
-        for(int game = 0; game < maxGames; game++){
+        for(int game = 0; game < scheduledGames; game++){
 
             // if total player bigger than game size
             int playerPerGame = players.size();
             if(playerPerGame > playersAllowed) playerPerGame = playersAllowed;
 
             for(int i = 0; i < playerPerGame; i++){
-                RaidPlayer player = players.get(registeredPlayers.get((game*playersAllowed) + i));
+                UUID targetUUID = registeredPlayers.get((game*playersAllowed) + i);
+                if(targetUUID == null) continue;
+                RaidPlayer player = players.get(targetUUID);
                 player.registeredGame = game;
                 player.livesLeft = revivesAllowed;
 
