@@ -44,6 +44,7 @@ public class InGameState extends RaidStateData {
         //if no spawn points
 
         raid.executedWinCommandCount = 0;
+        raid.won = false;
 
         if(raid.playerSpawnPoints.size() == 0){
             Bukkit.getServer().broadcastMessage(Man10Raid.prefix + "スポーンポイントを発見することができませんでした");

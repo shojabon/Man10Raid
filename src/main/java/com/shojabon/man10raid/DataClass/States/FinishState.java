@@ -65,7 +65,6 @@ public class FinishState extends RaidStateData {
     @Override
     public void end() {
         endAreaTimer.stop();
-        Bukkit.getServer().broadcastMessage("end finish state");
     }
 
     @Override
@@ -85,8 +84,15 @@ public class FinishState extends RaidStateData {
                 Bukkit.getServer().broadcastMessage("敗北");
             }
 
-            //final
-            endGameProcess();
+            //endgame process
+            if(raid.currentGame < raid.scheduledGames-1){
+                //has next
+                raid.currentGame += 1;
+                raid.setGameState(RaidState.PREPARATION);
+                return;
+            }
+            //if last
+            Man10Raid.api.endGame();
 
         });
     }
@@ -109,26 +115,6 @@ public class FinishState extends RaidStateData {
 
             scoreboard.renderText();
         });
-    }
-
-
-    //winner area
-    public void endAreaProcess(){
-        timerTillNextState.setRemainingTime(raid.endAreaTime);
-        timerTillNextState.start();
-        endAreaFinished = true;
-    }
-
-
-    public void endGameProcess(){
-        if(raid.currentGame < raid.scheduledGames-1){
-            //has next
-            raid.currentGame += 1;
-            raid.setGameState(RaidState.PREPARATION);
-            return;
-        }
-        //if last
-        Man10Raid.api.endGame();
     }
 
     @EventHandler

@@ -114,24 +114,6 @@ public class Man10RaidAPI {
         });
     }
 
-    public void cancelGame(){
-        Bukkit.getScheduler().runTask(plugin, ()-> {
-            if(currentGame == null) return;
-
-            //reset spawn points
-            for(RaidPlayer player : currentGame.players.values()){
-                Player p = player.getPlayer();
-                if(p == null) continue;
-                p.setBedSpawnLocation(Man10Raid.lobbyLocation);
-            }
-
-            currentGame.teleportAllPlayersToLobby();
-            currentGame.setGameState(RaidState.INACTIVE);
-            currentGame = null;
-            Man10Raid.whitelist.disable();
-        });
-    }
-
     //command script
 
     public void executeScript(ArrayList<String> script){

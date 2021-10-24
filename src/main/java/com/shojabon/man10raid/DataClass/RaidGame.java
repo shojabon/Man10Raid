@@ -10,6 +10,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -201,7 +203,7 @@ public class RaidGame {
             // if total player bigger than game size
             int playerPerGame = players.size();
             if(playerPerGame > playersAllowed) playerPerGame = playersAllowed;
-
+            if(registeredPlayers.size() - (game*playersAllowed) <= playersAllowed) playerPerGame = registeredPlayers.size() - (game*playersAllowed);
             for(int i = 0; i < playerPerGame; i++){
                 UUID targetUUID = registeredPlayers.get((game*playersAllowed) + i);
                 if(targetUUID == null) continue;
@@ -298,13 +300,19 @@ public class RaidGame {
                 }else{
                     p.setBedSpawnLocation(respawnLocation, true);
                 }
-
                 p.sendMessage("残りライフ" + deadPlayer.livesLeft);
+                p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*10, 50));
+                p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*10, 50));
             }else{
                 //no respawns left
                 p.setBedSpawnLocation(Man10Raid.lobbyLocation, true);
                 p.sendMessage("あなたは死んだ");
             }
+            p.spigot().respawn();
+            Bukkit.getScheduler().runTaskLater(plugin, ()->{
+                p.openInventory(Bukkit.createInventory(null, 9));
+                p.closeInventory();
+            }, 5);
         }
 
         Bukkit.getScheduler().runTaskLater(plugin, ()->{

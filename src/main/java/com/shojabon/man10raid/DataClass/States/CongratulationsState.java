@@ -37,7 +37,6 @@ public class CongratulationsState extends RaidStateData {
     @Override
     public void end() {
         endAreaTimer.stop();
-        Bukkit.getServer().broadcastMessage("end finish state");
     }
 
     @Override

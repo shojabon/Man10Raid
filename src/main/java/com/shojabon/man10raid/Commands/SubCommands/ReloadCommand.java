@@ -17,7 +17,7 @@ public class ReloadCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Man10Raid.api.cancelGame();
+        Man10Raid.api.endGame();
         plugin.reloadConfig();
         Man10Raid.config = plugin.getConfig();
 
