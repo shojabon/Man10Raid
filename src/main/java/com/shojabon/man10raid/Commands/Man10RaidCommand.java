@@ -70,6 +70,16 @@ public class Man10RaidCommand extends SCommandRouter {
                         setExecutor(new TestCommand(plugin))
         );
 
+        //base64 give
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("base64Give"))
+                        .setInfinity()
+
+                        .addRequiredPermission("man10raid.base64give").addExplanation("base64アイテムを付与する").
+                        setExecutor(new Base64GiveCommand(plugin))
+        );
+
 
         //vision command
 
