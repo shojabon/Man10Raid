@@ -14,6 +14,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 
@@ -23,9 +24,57 @@ public class FinishState extends RaidStateData {
 
     STimer endAreaTimer = new STimer();
 
-    boolean endAreaFinished = false;
+    Plugin plugin = Bukkit.getPluginManager().getPlugin("Man10Raid");
+
+    public void executeFinishCommands(ArrayList<String> commands){
+        for(String command: commands){
+            // players alive and dead and all
+            if(command.contains("<PLAYER-ALIVE>")){
+                for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+                    String localCommand = command;
+                    if(player.livesLeft != 0) localCommand = localCommand.replaceAll("<PLAYER-ALIVE>", player.name);
+                    String finalLocalCommand = localCommand;
+                    Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalLocalCommand));
+                }
+            }
+            if(command.contains("<PLAYER-DEAD>")){
+                for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+                    String localCommand = command;
+                    if(player.livesLeft == 0) localCommand = localCommand.replaceAll("<PLAYER-DEAD>", player.name);
+                    String finalLocalCommand = localCommand;
+                    Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalLocalCommand));
+                }
+            }
+            if(command.contains("<PLAYER>")){
+                for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+                    String localCommand = command;
+                    localCommand = localCommand.replaceAll("<PLAYER>", player.name);
+                    String finalLocalCommand = localCommand;
+                    Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalLocalCommand));
+                }
+            }
+
+            //top n damage
+            if(command.contains("<PLAYER-TOTAL-DAMAGE-TOP:")){
+                String[] localCommand = command.split(" ");
+                for(int i = 0; i < localCommand.length; i++) {
+                    if(!localCommand[i].contains("<PLAYER-TOTAL-DAMAGE-TOP:")) continue;
+                    int n = Integer.parseInt(localCommand[i].replace("<PLAYER-TOTAL-DAMAGE-TOP:", "").replace(">", ""));
+                    ArrayList<RaidPlayer> players = raid.getTotalDamageRanking(raid.currentGame);
+                    if(n > players.size()) n = players.size();
+                    for(int ii = 0; ii < n; ii++){
+                        localCommand[i] = players.get(ii).name;
+
+                        StringBuilder finalCommand = new StringBuilder();
+                        for(String elem : localCommand) finalCommand.append(elem).append(" ");
+                        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand.substring(0, finalCommand.length()-1)));
+                    }
 
 
+                }
+            }
+        }
+    }
 
     @Override
     public void start() {
@@ -73,7 +122,7 @@ public class FinishState extends RaidStateData {
         timerTillNextState.addOnEndEvent(() -> {
             if(raid.won){
                 //win process
-                Bukkit.getServer().broadcastMessage("勝利");
+                executeFinishCommands(raid.winCommands);
                 if(raid.endArea != null){
                     //if end area exists
                     raid.setGameState(RaidState.CONGRATULATIONS);
@@ -81,6 +130,7 @@ public class FinishState extends RaidStateData {
                 }
             }else{
                 //lose process
+                executeFinishCommands(raid.loseCommands);
                 Bukkit.getServer().broadcastMessage("敗北");
             }
 

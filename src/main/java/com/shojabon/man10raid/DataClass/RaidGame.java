@@ -71,6 +71,9 @@ public class RaidGame {
 
     //commands
     public HashMap<RaidState, ArrayList<String>> commands = new HashMap<>();
+    public ArrayList<String> winCommands = new ArrayList<>();
+    public ArrayList<String> loseCommands = new ArrayList<>();
+
 
     // constructors
 
@@ -118,6 +121,9 @@ public class RaidGame {
 
             }
         }
+
+        winCommands = new ArrayList<>(config.getStringList("winCommands"));
+        loseCommands = new ArrayList<>(config.getStringList("loseCommands"));
     }
 
     // if game playable

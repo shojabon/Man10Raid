@@ -26,3 +26,10 @@ commands:
     - say test
     - sleep 5
     - say test2
+
+winCommands:
+  - give <PLAYER-ALIVE> something
+  - give <PLAYER-TOTAL-DAMAGE-TOP:5> SOMETHING
+
+loseCommands:
+  - say lose
