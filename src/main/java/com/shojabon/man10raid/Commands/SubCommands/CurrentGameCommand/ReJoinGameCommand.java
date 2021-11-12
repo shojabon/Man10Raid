@@ -4,6 +4,7 @@ import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.DataClass.RaidPlayer;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
+import com.shojabon.man10raid.utils.PlayerInventoryViewerMenu;
 import com.shojabon.mcutils.Utils.SInventory.SInventory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -46,14 +47,14 @@ public class ReJoinGameCommand implements CommandExecutor {
             sender.sendMessage(Man10Raid.prefix + "§c§lライフがありません");
             return true;
         }
-//        if(!player.isSameInventoryState()){
-//            sender.sendMessage(Man10Raid.prefix + "§c§lインベントリの状態が同じではありません");
-//            PlayerInventoryViewerMenu inventory = new PlayerInventoryViewerMenu("§c§lインベントリをこの状態にしてください", plugin);
-//            inventory.setInventoryContents(player.inventoryState);
-//            inventory.setArmorContents(player.armorState);
-//            inventory.open(player.getPlayer());
-//            return true;
-//        }
+        if(!player.isSameInventoryState()){
+            sender.sendMessage(Man10Raid.prefix + "§c§lインベントリの状態が同じではありません");
+            PlayerInventoryViewerMenu inventory = new PlayerInventoryViewerMenu("§c§lインベントリをこの状態にしてください", plugin);
+            inventory.setInventoryContents(player.inventoryState);
+            inventory.setArmorContents(player.armorState);
+            inventory.open(player.getPlayer());
+            return true;
+        }
 
         raid.teleportPlayerToArena(player.getPlayer());
 
