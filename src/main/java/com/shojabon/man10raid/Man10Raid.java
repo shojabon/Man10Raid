@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -107,6 +108,13 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
     public void onDrop(PlayerDropItemEvent e){
         if(e.getPlayer().hasPermission("man10raid.admin")) return;
         e.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onLeave(PlayerQuitEvent e){
+        for(String command: getConfig().getStringList("onLeaveCommand")){
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<PLAYER>", e.getPlayer().getName()).replace("<UUID>", e.getPlayer().getUniqueId().toString()));
+        }
     }
 
     public void createTables(){

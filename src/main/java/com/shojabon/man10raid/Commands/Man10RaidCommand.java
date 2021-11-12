@@ -74,10 +74,36 @@ public class Man10RaidCommand extends SCommandRouter {
         addCommand(
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("base64Give"))
-                        .setInfinity()
 
                         .addRequiredPermission("man10raid.base64give").addExplanation("base64アイテムを付与する").
                         setExecutor(new Base64GiveCommand(plugin))
+        );
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("base64Give"))
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.ONLINE_PLAYER))
+                        .addArgument(new SCommandArgument())
+
+                        .addRequiredPermission("man10raid.base64give").addExplanation("base64アイテムを付与する").
+                        setExecutor(new Base64GiveCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("md5Take"))
+
+                        .addRequiredPermission("man10raid.md5take").addExplanation("md5アイテム種を削除する").
+                        setExecutor(new MD5TakeCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("md5Take"))
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.ONLINE_PLAYER))
+                        .addArgument(new SCommandArgument())
+
+                        .addRequiredPermission("man10raid.md5take").addExplanation("md5アイテム種を削除する").
+                        setExecutor(new MD5TakeCommand(plugin))
         );
 
 
