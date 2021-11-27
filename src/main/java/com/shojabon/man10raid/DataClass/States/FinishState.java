@@ -17,6 +17,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Random;
+import java.util.UUID;
 
 public class FinishState extends RaidStateData {
 
@@ -73,7 +76,53 @@ public class FinishState extends RaidStateData {
 
                 }
             }
+
+            //weighted
+            if(command.contains("<WEIGHTED-PLAYER-TOTAL-DAMAGE:")){
+                String[] localCommand = command.split(" ");
+                for(int i = 0; i < localCommand.length; i++) {
+                    if(!localCommand[i].contains("<WEIGHTED-PLAYER-TOTAL-DAMAGE:")) continue;
+                    int n = Integer.parseInt(localCommand[i].replace("<WEIGHTED-PLAYER-TOTAL-DAMAGE:", "").replace(">", ""));
+                    ArrayList<RaidPlayer> players = getWeightedPlayers(n);
+                    if(n > players.size()) n = players.size();
+                    for(int ii = 0; ii < n; ii++){
+                        localCommand[i] = players.get(ii).name;
+
+                        StringBuilder finalCommand = new StringBuilder();
+                        for(String elem : localCommand) finalCommand.append(elem).append(" ");
+                        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand.substring(0, finalCommand.length()-1)));
+                    }
+
+
+                }
+            }
         }
+    }
+
+    public ArrayList<RaidPlayer> getWeightedPlayers(int count){
+        LinkedHashMap<Long, UUID> uuidRangeList = new LinkedHashMap<>();
+        ArrayList<RaidPlayer> result = new ArrayList<>();
+        long currentIndex = 0;
+
+        for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
+            currentIndex += player.totalDamage;
+            uuidRangeList.put(currentIndex, player.uuid);
+        }
+
+        for(int i = 0; i < count; i++){
+            long winner = new Random().nextInt((int) currentIndex);
+            UUID winnerUUID = null;
+            long key = -1;
+            for(int ii = 0; ii < uuidRangeList.size(); ii++){
+                long winnerKey = (long)uuidRangeList.keySet().toArray()[ii];
+                if(winner < winnerKey) continue;
+                winnerUUID = uuidRangeList.get(winnerKey);
+                key = winnerKey;
+            }
+            if(key == -1) continue;
+            result.add(raid.getPlayer(winnerUUID));
+        }
+        return result;
     }
 
     @Override
@@ -118,7 +167,7 @@ public class FinishState extends RaidStateData {
 
     @Override
     public void defineTimer(){
-        timerTillNextState.setRemainingTime(10);
+        timerTillNextState.setRemainingTime(30);
         timerTillNextState.addOnEndEvent(() -> {
             if(raid.won){
                 //win process
@@ -131,7 +180,6 @@ public class FinishState extends RaidStateData {
             }else{
                 //lose process
                 executeFinishCommands(raid.loseCommands);
-                Bukkit.getServer().broadcastMessage("敗北");
             }
 
             //endgame process

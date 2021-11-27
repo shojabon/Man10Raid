@@ -14,4 +14,4 @@ servers:
 arenaWorld: "arena"
 
 onLeaveCommand:
-  - mraid md5take <player> md5
+  - mraid md5take <PLAYER> md5

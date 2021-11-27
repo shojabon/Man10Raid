@@ -82,7 +82,7 @@ public class Man10RaidCommand extends SCommandRouter {
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("base64Give"))
                         .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.ONLINE_PLAYER))
-                        .addArgument(new SCommandArgument())
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.STRING))
 
                         .addRequiredPermission("man10raid.base64give").addExplanation("base64アイテムを付与する").
                         setExecutor(new Base64GiveCommand(plugin))
@@ -100,7 +100,7 @@ public class Man10RaidCommand extends SCommandRouter {
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("md5Take"))
                         .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.ONLINE_PLAYER))
-                        .addArgument(new SCommandArgument())
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.STRING))
 
                         .addRequiredPermission("man10raid.md5take").addExplanation("md5アイテム種を削除する").
                         setExecutor(new MD5TakeCommand(plugin))
