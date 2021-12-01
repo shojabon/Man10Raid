@@ -105,19 +105,23 @@ public class FinishState extends RaidStateData {
         long currentIndex = 0;
 
         for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
+            if(player.totalDamage == 0) continue;
             currentIndex += player.totalDamage;
             uuidRangeList.put(currentIndex, player.uuid);
         }
 
+
         for(int i = 0; i < count; i++){
+            if(currentIndex == 0) currentIndex++;
             long winner = new Random().nextInt((int) currentIndex);
             UUID winnerUUID = null;
             long key = -1;
             for(int ii = 0; ii < uuidRangeList.size(); ii++){
                 long winnerKey = (long)uuidRangeList.keySet().toArray()[ii];
-                if(winner < winnerKey) continue;
+                if(winner > winnerKey) continue;
                 winnerUUID = uuidRangeList.get(winnerKey);
                 key = winnerKey;
+                break;
             }
             if(key == -1) continue;
             result.add(raid.getPlayer(winnerUUID));
