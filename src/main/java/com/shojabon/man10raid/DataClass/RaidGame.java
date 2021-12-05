@@ -143,19 +143,18 @@ public class RaidGame {
         if(state == currentGameState) return;
 
         Bukkit.getScheduler().runTask(plugin, ()-> {
-            currentGameState = state;
             //stop current state
             if(currentGameStateData != null){
                 currentGameStateData.beforeEnd();
             }
 
-
             //start next state
+            currentGameState = state;
             RaidStateData data = getStateData(state);
             if(data == null) return;
-            data.beforeStart();
-            //set current state data
             currentGameStateData = data;
+            currentGameStateData.beforeStart();
+            //set current state data
             //execute commands
             if(!commands.containsKey(state)) return;
             Man10Raid.api.executeScript(commands.get(state));
@@ -314,11 +313,12 @@ public class RaidGame {
                 p.setBedSpawnLocation(Man10Raid.lobbyLocation, true);
                 p.sendMessage("あなたは死んだ");
             }
-            p.spigot().respawn();
+
+//            p.spigot().respawn();
             Bukkit.getScheduler().runTaskLater(plugin, ()->{
-                p.openInventory(Bukkit.createInventory(null, 9));
-                p.closeInventory();
-            }, 5);
+                p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*10, 50));
+                p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*10, 50));
+            }, 20);
         }
 
         Bukkit.getScheduler().runTaskLater(plugin, ()->{
@@ -354,6 +354,7 @@ public class RaidGame {
     public void payOutToPlayers(int game){
         ArrayList<RaidPlayer> players = getPlayersInGame(game);
         for(RaidPlayer player: players){
+            if(player.getPlayer() == null) continue;
             if(!player.getPlayer().isOnline()) continue;
             long money = (long) (player.totalDamage * totalDamagePayoutMultiplier +
                                 player.totalProjectileDamage * totalProjectileDamagePayoutMultiplier +

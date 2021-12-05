@@ -34,6 +34,7 @@ public class PreparationState extends RaidStateData {
                 if(player.getPlayer() == null) continue; //if offline
 
                 if(player.registeredGame != -1){
+                    System.out.println(player.name + " " + (player.registeredGame+1));
                     //has match
                     Man10RaidAPI.sendHighlightedMessage(player.getPlayer(), "§c§l当選しました！\n" + "あなたの試合は" + (player.registeredGame + 1) + "試合目です");
                 }else{

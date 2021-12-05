@@ -107,7 +107,7 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
     @EventHandler
     public void onDrop(PlayerDropItemEvent e){
         if(e.getPlayer().hasPermission("man10raid.admin")) return;
-        e.setCancelled(true);
+        //e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

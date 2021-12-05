@@ -171,10 +171,13 @@ public class FinishState extends RaidStateData {
 
     @Override
     public void defineTimer(){
-        timerTillNextState.setRemainingTime(30);
+        timerTillNextState.setRemainingTime(60);
         timerTillNextState.addOnEndEvent(() -> {
             if(raid.won){
                 //win process
+                for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+                    Bukkit.broadcastMessage(player.name + " " + player.totalDamage);
+                }
                 executeFinishCommands(raid.winCommands);
                 if(raid.endArea != null){
                     //if end area exists
@@ -219,11 +222,12 @@ public class FinishState extends RaidStateData {
         });
     }
 
-    @EventHandler
-    public void disableDamage(EntityDamageEvent e){
-        if(!(e.getEntity() instanceof Player)) return;
-        e.setCancelled(true);
-    }
+//    @EventHandler
+//    public void disableDamage(EntityDamageEvent e){
+//        if(raid.currentGameState != RaidState.FINISH) return;
+//        if(!(e.getEntity() instanceof Player)) return;
+//        e.setCancelled(true);
+//    }
 
     @Override
     public void cancel() {

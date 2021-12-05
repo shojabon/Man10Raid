@@ -17,8 +17,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,10 +61,6 @@ public class InGameState extends RaidStateData {
         timerTillNextState.start();
     }
 
-
-    @Override
-    public void end() {
-    }
 
     @Override
     public void defineTimer(){
@@ -238,6 +237,14 @@ public class InGameState extends RaidStateData {
     @EventHandler
     public void onDeath(PlayerDeathEvent e){
         raid.removeOneLife(e.getEntity().getUniqueId(), false);
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent e){
+        Bukkit.getScheduler().runTaskLater(plugin, ()->{
+            e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*10, 50));
+            e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*10, 50));
+        }, 5);
     }
 
     @EventHandler
