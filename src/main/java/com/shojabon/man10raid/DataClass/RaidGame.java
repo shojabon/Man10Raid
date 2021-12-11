@@ -150,7 +150,7 @@ public class RaidGame {
 
             //start next state
             currentGameState = state;
-            RaidStateData data = getStateData(state);
+            RaidStateData data = getStateData(currentGameState);
             if(data == null) return;
             currentGameStateData = data;
             currentGameStateData.beforeStart();
@@ -321,6 +321,10 @@ public class RaidGame {
             }, 20);
         }
 
+        checkIfGameEnded();
+    }
+
+    public void checkIfGameEnded(){
         Bukkit.getScheduler().runTaskLater(plugin, ()->{
             //write if all dead function here
             if(allLivesLeftInCurrentGame() <= 0){
