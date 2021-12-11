@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +39,8 @@ public class MD5TakeCommand implements CommandExecutor {
                 sender.sendMessage(Man10Raid.prefix + "§c§lプレイヤーが存在しません");
                 return false;
             }
+            p.closeInventory(InventoryCloseEvent.Reason.PLAYER);
+
             ItemStack[] items = p.getInventory().getContents().clone();
             for(int i = 0; i < items.length; i++){
                 if(items[i] == null || items[i].getType() == Material.AIR) continue;
@@ -45,6 +48,16 @@ public class MD5TakeCommand implements CommandExecutor {
                 items[i] = new ItemStack(Material.AIR);
             }
             p.getInventory().setContents(items);
+
+            ItemStack[] armorItem = p.getInventory().getArmorContents().clone();
+            for(int i = 0; i < armorItem.length; i++){
+                if(armorItem[i] == null || armorItem[i].getType() == Material.AIR) continue;
+                if(!new SItemStack(armorItem[i]).getItemTypeMD5().equalsIgnoreCase(args[2])) continue;
+                armorItem[i] = new ItemStack(Material.AIR);
+            }
+            p.getInventory().setArmorContents(armorItem);
+
+
             sender.sendMessage(Man10Raid.prefix + "§a§lアイテムが消去されました");
         }
         return true;
