@@ -106,6 +106,7 @@ public class FinishState extends RaidStateData {
 
         for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
             if(player.totalDamage == 0) continue;
+            if(player.livesLeft == 0) continue;
             currentIndex += player.totalDamage;
             uuidRangeList.put(currentIndex, player.uuid);
         }
