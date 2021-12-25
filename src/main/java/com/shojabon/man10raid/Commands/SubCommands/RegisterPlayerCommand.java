@@ -4,12 +4,14 @@ import com.shojabon.man10raid.DataClass.RaidGame;
 import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class RegisterPlayerCommand implements CommandExecutor {
@@ -32,6 +34,17 @@ public class RegisterPlayerCommand implements CommandExecutor {
             // register self
             raid.registerPlayer(((Player)sender), false);
         }else{
+            //if uuid
+            if(args[1].length() >= 32){
+                OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(UUID.fromString(args[1]));
+                if(!p.getUniqueId().toString().equals(args[1])){
+                    sender.sendMessage(Man10Raid.prefix + "§c§lプレイヤーが存在しません");
+                    return false;
+                }
+                raid.registerPlayer(UUID.fromString(args[1]), plugin.getName(), false);
+                raid.preRegisterPlayer(UUID.fromString(args[1]), 1);
+                return true;
+            }
             // if register other
             Player targetPlayer = Bukkit.getServer().getPlayer(args[1]);
             if(targetPlayer == null || !targetPlayer.getName().equals(args[1])){

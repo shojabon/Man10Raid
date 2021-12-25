@@ -59,6 +59,7 @@ public class InGameState extends RaidStateData {
 
         Bukkit.getScheduler().runTask(plugin, this::movePlayersToArena);
         timerTillNextState.start();
+        Bukkit.getScheduler().runTaskLater(plugin, raid::checkIfGameEnded, 20*10);
     }
 
 
@@ -105,7 +106,8 @@ public class InGameState extends RaidStateData {
             scoreboard.setText(2, "§a§l総合回復量: §e§l" + totalHeal);
             scoreboard.setText(3, "§a§l総合弓ダメージ: §e§l" + totalProjectileDamage);
             scoreboard.setText(4, "§a§l総ライフ数: §e§l" + raid.allLivesLeftInCurrentGame());
-            scoreboard.setText(6, "§a§l残り§e§l" + e + "§a§l秒");
+            scoreboard.setText(5, "§a§l残りプレイヤー数: §e§l" + raid.getNumberOfPlayersAliveInGame(raid.currentGame));
+            scoreboard.setText(7, "§a§l残り§e§l" + e + "§a§l秒");
 
             scoreboard.renderText();
         });

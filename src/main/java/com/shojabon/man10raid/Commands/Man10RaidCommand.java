@@ -56,7 +56,7 @@ public class Man10RaidCommand extends SCommandRouter {
         addCommand(
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("register"))
-                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.ONLINE_PLAYER).addAlias("プレイヤー名")).
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.STRING).addAlias("プレイヤー名")).
 
                         addRequiredPermission("man10raid.register.other").addExplanation("レイド選手登録をする").
                         setExecutor(new RegisterPlayerCommand(plugin))

@@ -104,12 +104,6 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
         e.getPlayer().setGameMode(GameMode.SURVIVAL);
     }
 
-    @EventHandler
-    public void onDrop(PlayerDropItemEvent e){
-        if(e.getPlayer().hasPermission("man10raid.admin")) return;
-        //e.setCancelled(true);
-    }
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e){
         for(String command: getConfig().getStringList("onLeaveCommand")){
@@ -151,31 +145,5 @@ public final class Man10Raid extends JavaPlugin implements @NotNull Listener {
                 "ENGINE=InnoDB\n" +
                 ";\n");
     }
-//
-//    @EventHandler
-//    public void test(InventoryClickEvent e){
-//        if(e.getSlotType() != InventoryType.SlotType.ARMOR && e.getRawSlot() != 5) return;
-//        if(e.getCursor() == null) return;
-//        if(e.getCursor().getType() == Material.AIR) return;
-//        e.setCancelled(true);
-//
-//        ItemStack[] items = e.getWhoClicked().getInventory().getArmorContents();
-//        ArrayUtils.reverse(items);
-//
-//        ItemStack originalItem = items[e.getRawSlot()-5];
-//        items[e.getRawSlot()-5] = e.getCursor().clone();
-//        ArrayUtils.reverse(items);
-//
-//        if(originalItem == null) originalItem = new ItemStack(Material.AIR);
-//        e.getWhoClicked().setItemOnCursor(originalItem.clone());
-//        e.getWhoClicked().getInventory().setArmorContents(items.clone());
-//
-//
-//    }
-//
-//    @EventHandler
-//    public void onMove(PlayerMoveEvent e){
-//        Bukkit.broadcastMessage(e.getPlayer().getName() + " " + e.getPlayer().getVelocity().getX() + " " + e.getPlayer().getVelocity().getY() + " " + e.getPlayer().getVelocity().getZ());
-//    }
 
 }

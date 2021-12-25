@@ -194,25 +194,72 @@ public class RaidGame {
         return true;
     }
 
+    public boolean registerPlayer(UUID p, String name, boolean bypass){
+        if(currentGameState != RaidState.REGISTERING && !bypass){
+            return false;
+        }
+        if(players.containsKey(p)) {
+            return false;
+        }
+        players.put(p, new RaidPlayer(name, p));
+        return true;
+    }
+
+    public void preRegisterPlayer(UUID uuid, int gameId){
+        if(!preRegisteredPlayers.containsKey(gameId)) preRegisteredPlayers.put(gameId, new ArrayList<>());
+        preRegisteredPlayers.get(gameId).add(uuid);
+    }
+
+    public HashMap<Integer, List<UUID>> preRegisteredPlayers = new HashMap<>();
+
+    private <T> List<List<T>> batchList(List<T> inputList, final int maxSize) {
+        List<List<T>> sublists = new ArrayList<>();
+
+        final int size = inputList.size();
+
+        for (int i = 0; i < size; i += maxSize) {
+            // Math.min... size will be smaller than i + maxSize for the last batch (unless perfectly divisible),
+            // including the first batch if size is smaller than max size
+            sublists.add(new ArrayList<>(inputList.subList(i, Math.min(size, i + maxSize))));
+        }
+
+        return sublists;
+    }
+
     public void dividePlayers(){
+
         ArrayList<UUID> registeredPlayers = new ArrayList<>(players.keySet());
         Collections.shuffle(registeredPlayers);
+
         if(playersAllowed == 0) return;
+
+
 
 
         int maxGames = players.size()/playersAllowed;
         if(players.size()%playersAllowed != 0) maxGames++;
         if(scheduledGames > maxGames || scheduledGames <= 0) scheduledGames = maxGames; // if scheduled games is too many games for the amount of players
-        for(int game = 0; game < scheduledGames; game++){
 
-            // if total player bigger than game size
-            int playerPerGame = players.size();
-            if(playerPerGame > playersAllowed) playerPerGame = playersAllowed;
-            if(registeredPlayers.size() - (game*playersAllowed) <= playersAllowed) playerPerGame = registeredPlayers.size() - (game*playersAllowed);
-            for(int i = 0; i < playerPerGame; i++){
-                UUID targetUUID = registeredPlayers.get((game*playersAllowed) + i);
-                if(targetUUID == null) continue;
-                RaidPlayer player = players.get(targetUUID);
+        //remove players from registered players
+        for(int game = 0; game < scheduledGames; game++){
+            if(!preRegisteredPlayers.containsKey(game)) continue;
+            for(UUID preRegistered: preRegisteredPlayers.get(game)){
+                registeredPlayers.remove(preRegistered);
+            }
+        }
+
+        //add players to index at location
+        for(int game = 0; game < scheduledGames; game++){
+            if(!preRegisteredPlayers.containsKey(game)) continue;
+            for(UUID preRegistered: preRegisteredPlayers.get(game)){
+                registeredPlayers.add(game*playersAllowed, preRegistered);
+            }
+        }
+
+        List<List<UUID>> dividedPlayers = batchList(registeredPlayers, playersAllowed);
+        for(int game = 0; game < scheduledGames; game++){
+            for(UUID uuid : dividedPlayers.get(game)){
+                RaidPlayer player = players.get(uuid);
                 player.registeredGame = game;
                 player.livesLeft = revivesAllowed;
 
@@ -220,12 +267,25 @@ public class RaidGame {
                 Man10Raid.whitelist.setKickMessages(player.uuid, "あなたは" + (game + 1)  + "試合目です");
             }
         }
+
+
+
     }
 
     public ArrayList<RaidPlayer> getPlayersInGame(int gameNumber){
         ArrayList<RaidPlayer> result = new ArrayList<>();
         for(RaidPlayer player: players.values()){
             if(player.registeredGame == gameNumber) result.add(player);
+        }
+        return result;
+    }
+
+    public int getNumberOfPlayersAliveInGame(int gameNumber){
+        ArrayList<RaidPlayer> playersInGame = getPlayersInGame(gameNumber);
+        int result = 0;
+        for(RaidPlayer player : playersInGame){
+            if(player.livesLeft == 0) continue;
+            result += 1;
         }
         return result;
     }

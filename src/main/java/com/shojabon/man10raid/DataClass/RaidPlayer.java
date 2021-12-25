@@ -25,6 +25,8 @@ public class RaidPlayer {
     public boolean paymentSuccess = false;
     public long prizeMoney = 0;
 
+    public boolean expert = false;
+
     //inventory states
     public HashMap<Integer, ItemStack> inventoryState = new HashMap<>();
     public HashMap<Integer, ItemStack> armorState = new HashMap<>();
