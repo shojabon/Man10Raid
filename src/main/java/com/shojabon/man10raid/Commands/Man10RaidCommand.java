@@ -244,6 +244,17 @@ public class Man10RaidCommand extends SCommandRouter {
 
         addCommand(
                 new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("current"))
+                        .addArgument(new SCommandArgument().addAllowedString("setMustBeAliveForPercentOfGame"))
+                        .addArgument(new SCommandArgument().addAlias("パーセント")).
+
+                        addRequiredPermission("man10raid.current.mustBeAliveForPercentOfGame")
+                        .addExplanation("勝利必に必要な加度を設定する").
+                        setExecutor(new SetMustBeAliveForPercentOfGameCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("rejoin"))
 
 

@@ -1,5 +1,6 @@
 package com.shojabon.man10raid.DataClass;
 
+import com.shojabon.mcutils.Utils.SItemStack;
 import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,11 +26,11 @@ public class RaidPlayer {
     public boolean paymentSuccess = false;
     public long prizeMoney = 0;
 
-    public boolean expert = false;
+    public long aliveTime = 0;
 
     //inventory states
-    public HashMap<Integer, ItemStack> inventoryState = new HashMap<>();
-    public HashMap<Integer, ItemStack> armorState = new HashMap<>();
+    public HashMap<String, Integer> inventoryState = new HashMap<>();
+    public HashMap<String, Integer> armorState = new HashMap<>();
 
     public RaidPlayer(String name, UUID uuid){
         this.name = name;
@@ -45,11 +46,16 @@ public class RaidPlayer {
     //inventory functions
 
 
-    public HashMap<Integer, ItemStack> createInventoryState(ItemStack[] items){
-        HashMap<Integer, ItemStack> result = new HashMap<>();
+    public HashMap<String, Integer> createInventoryState(ItemStack[] items){
+        HashMap<String, Integer> result = new HashMap<>();
         for(int i = 0; i < items.length; i++){
             if(items[i] == null) continue;
-            result.put(i, items[i]);
+            ItemStack item = items[i].clone();
+            String md5 = new SItemStack(item).getItemTypeMD5(false);
+            if (!result.containsKey(md5)) {
+                result.put(md5, 0);
+            }
+            result.put(md5, result.get(md5) + item.getAmount());
         }
         return result;
     }
@@ -65,11 +71,18 @@ public class RaidPlayer {
     public boolean isSameInventoryState(){
         Player p = getPlayer();
         if(!p.isOnline()) return false;
-        System.out.println(inventoryState.size());
-        System.out.println(armorState.size());
+        if(inventoryState == null || armorState == null) return true;
 
-        if(!inventoryState.equals(createInventoryState(p.getInventory().getContents()))) return false;
-        if(!armorState.equals(createInventoryState(p.getInventory().getArmorContents()))) return false;
+        HashMap<String, Integer> currentInventory = createInventoryState(p.getInventory().getContents());
+        for(String key : currentInventory.keySet()){
+            if(!inventoryState.containsKey(key)) return false;
+            if(inventoryState.get(key) < currentInventory.get(key)) return false;
+        }
+        HashMap<String, Integer> currentArmor = createInventoryState(p.getInventory().getArmorContents());
+        for(String key : currentArmor.keySet()){
+            if(!armorState.containsKey(key)) return false;
+            if(armorState.get(key) < currentArmor.get(key)) return false;
+        }
         return true;
 
     }

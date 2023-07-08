@@ -46,14 +46,10 @@ public class ReJoinGameCommand implements CommandExecutor {
             sender.sendMessage(Man10Raid.prefix + "§c§lライフがありません");
             return true;
         }
-//        if(!player.isSameInventoryState()){
-//            sender.sendMessage(Man10Raid.prefix + "§c§lインベントリの状態が同じではありません");
-//            PlayerInventoryViewerMenu inventory = new PlayerInventoryViewerMenu("§c§lインベントリをこの状態にしてください", plugin);
-//            inventory.setInventoryContents(player.inventoryState);
-//            inventory.setArmorContents(player.armorState);
-//            inventory.open(player.getPlayer());
-//            return true;
-//        }
+        if(!player.isSameInventoryState()){
+            sender.sendMessage(Man10Raid.prefix + "§c§lインベントリの状態が同じではありません");
+            return true;
+        }
 
         raid.teleportPlayerToArena(player.getPlayer());
 

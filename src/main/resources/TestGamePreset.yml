@@ -14,6 +14,7 @@ settings:
   maxPlayersAllowed: 105
   minimumPlayersToBegin: 10
   neededWinCommand: 1
+  mustBeAliveForPercentOfGame: 0.8
 
 payout:
   totalDamage: 1

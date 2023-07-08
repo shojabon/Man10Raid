@@ -12,8 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -179,7 +177,17 @@ public class FinishState extends RaidStateData {
                 for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
                     Bukkit.broadcastMessage(player.name + " " + player.totalDamage);
                 }
+
+                // check for cheaters
+                for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+                    System.out.println(player.name + " " + player.livesLeft + " " + player.aliveTime + " " + raid.totalGameTime + " " +  ((float) raid.totalGameTime * raid.mustBeAliveForPercentOfGame));
+                    if(player.livesLeft == 0) continue;
+                    if(player.aliveTime >= ((float) raid.totalGameTime * raid.mustBeAliveForPercentOfGame)) continue;
+                    player.livesLeft = 0;
+                }
+
                 executeFinishCommands(raid.winCommands);
+
                 if(raid.endArea != null){
                     //if end area exists
                     raid.setGameState(RaidState.CONGRATULATIONS);

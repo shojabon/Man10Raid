@@ -74,6 +74,10 @@ public class RaidGame {
     public ArrayList<String> winCommands = new ArrayList<>();
     public ArrayList<String> loseCommands = new ArrayList<>();
 
+    // anti cheater
+    public float mustBeAliveForPercentOfGame = 0.8f;
+    public long totalGameTime = 0;
+
 
     // constructors
 
@@ -121,6 +125,9 @@ public class RaidGame {
 
             }
         }
+
+        // anti cheater
+        mustBeAliveForPercentOfGame = (float) config.getDouble("settings.mustBeAliveForPercentOfGame");
 
         winCommands = new ArrayList<>(config.getStringList("winCommands"));
         loseCommands = new ArrayList<>(config.getStringList("loseCommands"));

@@ -19,11 +19,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +42,7 @@ public class InGameState extends RaidStateData {
     @Override
     public void start() {
         //if no spawn points
-
+        raid.totalGameTime = 0;
         raid.executedWinCommandCount = 0;
         raid.won = false;
 
@@ -80,7 +77,14 @@ public class InGameState extends RaidStateData {
                         " §a§l総合回復: §e§l" + player.totalHeal +
                         " §a§l総合矢攻撃: §e§l" + player.totalProjectileDamage +
                         " §a§l残りライフ: §e§l" + player.livesLeft);
+                if(p.isDead()) continue;
+                if(!p.getLocation().getWorld().equals(raid.playerSpawnPoints.get(0).getWorld())) continue;
+                player.aliveTime += 1;
             }
+        });
+
+        timerTillNextState.addOnIntervalEvent(e -> {
+            raid.totalGameTime += 1;
         });
         timerTillNextState.addOnEndEvent(() -> {
             endGame();
