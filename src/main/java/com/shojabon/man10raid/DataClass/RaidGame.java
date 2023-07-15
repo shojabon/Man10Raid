@@ -75,7 +75,7 @@ public class RaidGame {
     public ArrayList<String> loseCommands = new ArrayList<>();
 
     // anti cheater
-    public float mustBeAliveForPercentOfGame = 0.8f;
+    public float mustBeAliveForPercentOfGame = 0.65f;
     public long totalGameTime = 0;
 
 

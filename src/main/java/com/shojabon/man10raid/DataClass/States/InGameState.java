@@ -243,6 +243,7 @@ public class InGameState extends RaidStateData {
     @EventHandler
     public void onDeath(PlayerDeathEvent e){
         raid.removeOneLife(e.getEntity().getUniqueId(), false);
+        raid.getPlayer(e.getEntity().getUniqueId()).saveInventoryState();
     }
 
     @EventHandler
