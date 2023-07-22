@@ -57,6 +57,9 @@ public class InGameState extends RaidStateData {
         Bukkit.getScheduler().runTask(plugin, this::movePlayersToArena);
         timerTillNextState.start();
         Bukkit.getScheduler().runTaskLater(plugin, raid::checkIfGameEnded, 20*10);
+        for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
+            player.saveInventoryState();
+        }
     }
 
 

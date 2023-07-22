@@ -31,6 +31,7 @@ public class RaidPlayer {
     //inventory states
     public HashMap<String, Integer> inventoryState = new HashMap<>();
     public HashMap<String, Integer> armorState = new HashMap<>();
+    private boolean inventoryStateSaved = false;
 
     public RaidPlayer(String name, UUID uuid){
         this.name = name;
@@ -66,12 +67,14 @@ public class RaidPlayer {
 
         inventoryState = createInventoryState(p.getInventory().getContents());
         armorState = createInventoryState(p.getInventory().getArmorContents());
+        inventoryStateSaved = true;
     }
 
     public boolean isSameInventoryState(){
         Player p = getPlayer();
         if(!p.isOnline()) return false;
         if(inventoryState == null || armorState == null) return true;
+        if(!inventoryStateSaved) return true;
 
         HashMap<String, Integer> currentInventory = createInventoryState(p.getInventory().getContents());
         for(String key : currentInventory.keySet()){
