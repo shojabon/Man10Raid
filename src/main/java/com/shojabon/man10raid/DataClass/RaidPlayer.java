@@ -63,6 +63,7 @@ public class RaidPlayer {
 
     public void saveInventoryState(){
         Player p = getPlayer();
+        if(p == null) return;
         if(!p.isOnline()) return;
 
         inventoryState = createInventoryState(p.getInventory().getContents());
