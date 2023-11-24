@@ -215,6 +215,27 @@ public class RaidGame {
         return true;
     }
 
+    public boolean unregisterPlayer(Player p){
+        if(currentGameState != RaidState.REGISTERING) {
+            p.sendMessage(Man10Raid.prefix + "§c§l現在選手登録をすることはできません");
+            return false;
+        }
+        if(!players.containsKey(p.getUniqueId())) {
+            p.sendMessage(Man10Raid.prefix + "§c§lあなたは登録されていません");
+            return false;
+        }
+        players.remove(p.getUniqueId());
+        p.sendMessage(Man10Raid.prefix + "§a§l登録を解除しました");
+        return true;
+    }
+
+    public boolean unregisterPlayer(UUID uuid){
+        if(currentGameState != RaidState.REGISTERING) return false;
+        if(!players.containsKey(uuid)) return false;
+        players.remove(uuid);
+        return true;
+    }
+
     public void preRegisterPlayer(UUID uuid, int gameId){
         if(!preRegisteredPlayers.containsKey(gameId)) preRegisteredPlayers.put(gameId, new ArrayList<>());
         preRegisteredPlayers.get(gameId).add(uuid);

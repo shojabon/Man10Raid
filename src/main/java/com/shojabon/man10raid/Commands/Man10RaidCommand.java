@@ -62,6 +62,24 @@ public class Man10RaidCommand extends SCommandRouter {
                         setExecutor(new RegisterPlayerCommand(plugin))
         );
 
+        //unregister command
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("unregister")).
+                        addRequiredPermission("man10raid.unregister").addExplanation("レイド選手登録を解除する").
+                        setExecutor(new UnregisterPlayerCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("unregister"))
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.STRING).addAlias("プレイヤー名")).
+
+                        addRequiredPermission("man10raid.unregister.other").addExplanation("レイド選手登録を解除する").
+                        setExecutor(new UnregisterPlayerCommand(plugin))
+        );
+
+
         //test
         addCommand(
                 new SCommandObject()

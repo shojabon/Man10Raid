@@ -26,7 +26,7 @@ public class SetLifeCommand implements CommandExecutor {
         }
         try{
             Player targetPlayer = Bukkit.getPlayer(args[2]);
-            if(targetPlayer == null){
+            if(targetPlayer == null || !targetPlayer.getName().equalsIgnoreCase(args[2])){
                 sender.sendMessage(Man10Raid.prefix + "§c§lプレイヤーが見つかりませんでした");
                 return true;
             }
@@ -39,6 +39,9 @@ public class SetLifeCommand implements CommandExecutor {
                 sender.sendMessage(Man10Raid.prefix + "§a§l" + targetPlayer.getName() + "の残機数: " + raid.getPlayer(targetPlayer.getUniqueId()).livesLeft);
             }else{
                 raid.getPlayer(targetPlayer.getUniqueId()).livesLeft = Integer.parseInt(args[3]);
+                if (raid.getPlayer(targetPlayer.getUniqueId()).livesLeft <= 0) {
+                    raid.getPlayer(targetPlayer.getUniqueId()).livesLeft = 0;
+                }
             }
         }catch (Exception e){
             sender.sendMessage(Man10Raid.prefix + "§c§l/mraid current setLife <プレイヤー名> <残機数>");

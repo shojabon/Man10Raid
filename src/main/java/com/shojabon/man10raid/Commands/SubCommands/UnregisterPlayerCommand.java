@@ -1,7 +1,6 @@
 package com.shojabon.man10raid.Commands.SubCommands;
 
 import com.shojabon.man10raid.DataClass.RaidGame;
-import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -11,13 +10,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
-public class RegisterPlayerCommand implements CommandExecutor {
+public class UnregisterPlayerCommand implements CommandExecutor {
     Man10Raid plugin;
 
-    public RegisterPlayerCommand(Man10Raid plugin){
+    public UnregisterPlayerCommand(Man10Raid plugin){
         this.plugin = plugin;
     }
 
@@ -32,7 +30,7 @@ public class RegisterPlayerCommand implements CommandExecutor {
 
         if(args.length == 1){
             // register self
-            raid.registerPlayer(((Player)sender), false);
+            raid.unregisterPlayer(((Player)sender));
         }else{
             //if uuid
             if(args[1].length() >= 32){
@@ -41,8 +39,7 @@ public class RegisterPlayerCommand implements CommandExecutor {
                     sender.sendMessage(Man10Raid.prefix + "§c§lプレイヤーが存在しません");
                     return false;
                 }
-                raid.registerPlayer(UUID.fromString(args[1]), p.getName(), false);
-                raid.preRegisterPlayer(UUID.fromString(args[1]), 1);
+                raid.unregisterPlayer(UUID.fromString(args[1]));
                 return true;
             }
             // if register other
@@ -51,7 +48,8 @@ public class RegisterPlayerCommand implements CommandExecutor {
                 sender.sendMessage(Man10Raid.prefix + "§c§lプレイヤーが存在しません");
                 return false;
             }
-            raid.registerPlayer(targetPlayer, false);
+            raid.unregisterPlayer(targetPlayer.getUniqueId());
+            sender.sendMessage(Man10Raid.prefix + "§a§lプレイヤーを登録解除しました");
         }
         return true;
     }
