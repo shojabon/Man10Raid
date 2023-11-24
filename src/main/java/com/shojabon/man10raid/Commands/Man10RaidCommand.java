@@ -255,6 +255,16 @@ public class Man10RaidCommand extends SCommandRouter {
         addCommand(
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("current"))
+                        .addArgument(new SCommandArgument().addAllowedString("setLife"))
+                        .addArgument(new SCommandArgument().addAllowedType(SCommandArgumentType.INT)).
+
+                        addRequiredPermission("man10raid.current.setLife").addExplanation("試合のライフを設定する").
+                        setExecutor(new SetLifeCommand(plugin))
+        );
+
+        addCommand(
+                new SCommandObject()
+                        .addArgument(new SCommandArgument().addAllowedString("current"))
                         .addArgument(new SCommandArgument().addAllowedString("setMustBeAliveForPercentOfGame"))
                         .addArgument(new SCommandArgument().addAlias("パーセント")).
 
