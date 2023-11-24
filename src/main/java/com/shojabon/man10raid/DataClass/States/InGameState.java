@@ -263,7 +263,9 @@ public class InGameState extends RaidStateData {
         if(originPlayer == null) return;
         originPlayer.saveInventoryState();
         raid.checkIfGameEnded();
-        //raid.removeOneLife(e.getPlayer().getUniqueId(), true);
+        if(raid.removeLifeOnLogout){
+            raid.removeOneLife(e.getPlayer().getUniqueId(), true);
+        }
     }
 
     //on arrow hit block

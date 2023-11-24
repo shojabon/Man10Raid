@@ -15,6 +15,7 @@ settings:
   minimumPlayersToBegin: 10
   neededWinCommand: 1
   mustBeAliveForPercentOfGame: 0.8
+  removeLifeOnLogout: false
 
 payout:
   totalDamage: 1

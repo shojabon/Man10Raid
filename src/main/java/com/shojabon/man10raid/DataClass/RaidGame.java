@@ -37,6 +37,8 @@ public class RaidGame {
     public int scheduledGames = 0;
     public int currentGame = 0;
 
+    public boolean removeLifeOnLogout = false;
+
     //time settings
     public int registrationTime = 0;
     public int preparationTime = 0;
@@ -113,6 +115,7 @@ public class RaidGame {
         minimumPlayersToBegin = config.getInt("settings.minimumPlayersToBegin");
         maxPlayersAllowed = config.getInt("settings.maxPlayersAllowed");
         neededWinCommand = config.getInt("settings.neededWinCommand");
+        removeLifeOnLogout = config.getBoolean("settings.removeLifeOnLogout");
 
         //load commands
         ConfigurationSection selection = config.getConfigurationSection("commands");
