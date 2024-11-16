@@ -29,6 +29,9 @@ public class CongratulationsState extends RaidStateData {
         for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
             if(player.getPlayer() == null) continue;
             if(!player.getPlayer().isOnline()) continue;
+            if(player.getPlayer().getLocation().getWorld()!=raid.respawnLocation.getWorld()&&!player.isSameInventoryState()){
+                player.livesLeft=0;
+            }
             if(player.livesLeft == 0) {
                 if(player.getPlayer() != null){
                     player.getPlayer().teleport(Man10Raid.lobbyLocation);
@@ -37,6 +40,9 @@ public class CongratulationsState extends RaidStateData {
             }
             player.getPlayer().teleport(raid.endArea);
         }
+
+
+        executeFinishCommands(raid,raid.winCommands);
 
     }
 

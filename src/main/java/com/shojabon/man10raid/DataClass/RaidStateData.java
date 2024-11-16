@@ -14,6 +14,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Random;
+import java.util.UUID;
+
 public abstract class RaidStateData implements Listener {
 
     Plugin plugin = Bukkit.getPluginManager().getPlugin("Man10Raid");
@@ -111,5 +116,106 @@ public abstract class RaidStateData implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e){
         if(bar == null) return;
         bar.addPlayer(e.getPlayer());
+    }
+
+    public void executeFinishCommands(RaidGame raid,ArrayList<String> commands){
+        for(String command: commands){
+            // players alive and dead and all
+            if(command.contains("<PLAYER-ALIVE>")){
+                for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+                    String localCommand = command;
+                    if(player.livesLeft != 0) localCommand = localCommand.replaceAll("<PLAYER-ALIVE>", player.name);
+                    String finalLocalCommand = localCommand;
+                    Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalLocalCommand));
+                }
+            }
+            if(command.contains("<PLAYER-DEAD>")){
+                for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+                    String localCommand = command;
+                    if(player.livesLeft == 0) localCommand = localCommand.replaceAll("<PLAYER-DEAD>", player.name);
+                    String finalLocalCommand = localCommand;
+                    Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalLocalCommand));
+                }
+            }
+            if(command.contains("<PLAYER>")){
+                for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
+                    String localCommand = command;
+                    localCommand = localCommand.replaceAll("<PLAYER>", player.name);
+                    String finalLocalCommand = localCommand;
+                    Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalLocalCommand));
+                }
+            }
+
+            //top n damage
+            if(command.contains("<PLAYER-TOTAL-DAMAGE-TOP:")){
+                String[] localCommand = command.split(" ");
+                for(int i = 0; i < localCommand.length; i++) {
+                    if(!localCommand[i].contains("<PLAYER-TOTAL-DAMAGE-TOP:")) continue;
+                    int n = Integer.parseInt(localCommand[i].replace("<PLAYER-TOTAL-DAMAGE-TOP:", "").replace(">", ""));
+                    ArrayList<RaidPlayer> players = raid.getTotalDamageRanking(raid.currentGame);
+                    if(n > players.size()) n = players.size();
+                    for(int ii = 0; ii < n; ii++){
+                        localCommand[i] = players.get(ii).name;
+
+                        StringBuilder finalCommand = new StringBuilder();
+                        for(String elem : localCommand) finalCommand.append(elem).append(" ");
+                        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand.substring(0, finalCommand.length()-1)));
+                    }
+
+
+                }
+            }
+
+            //weighted
+            if(command.contains("<WEIGHTED-PLAYER-TOTAL-DAMAGE:")){
+                String[] localCommand = command.split(" ");
+                for(int i = 0; i < localCommand.length; i++) {
+                    if(!localCommand[i].contains("<WEIGHTED-PLAYER-TOTAL-DAMAGE:")) continue;
+                    int n = Integer.parseInt(localCommand[i].replace("<WEIGHTED-PLAYER-TOTAL-DAMAGE:", "").replace(">", ""));
+                    ArrayList<RaidPlayer> players = getWeightedPlayers(raid,n);
+                    if(n > players.size()) n = players.size();
+                    for(int ii = 0; ii < n; ii++){
+                        localCommand[i] = players.get(ii).name;
+
+                        StringBuilder finalCommand = new StringBuilder();
+                        for(String elem : localCommand) finalCommand.append(elem).append(" ");
+                        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand.substring(0, finalCommand.length()-1)));
+                    }
+
+
+                }
+            }
+        }
+    }
+
+    private ArrayList<RaidPlayer> getWeightedPlayers(RaidGame raid,int count){
+        LinkedHashMap<Long, UUID> uuidRangeList = new LinkedHashMap<>();
+        ArrayList<RaidPlayer> result = new ArrayList<>();
+        long currentIndex = 0;
+
+        for(RaidPlayer player: raid.getPlayersInGame(raid.currentGame)){
+            if(player.totalDamage == 0) continue;
+            if(player.livesLeft == 0) continue;
+            currentIndex += player.totalDamage;
+            uuidRangeList.put(currentIndex, player.uuid);
+        }
+
+
+        for(int i = 0; i < count; i++){
+            if(currentIndex == 0) currentIndex++;
+            long winner = new Random().nextInt((int) currentIndex);
+            UUID winnerUUID = null;
+            long key = -1;
+            for(int ii = 0; ii < uuidRangeList.size(); ii++){
+                long winnerKey = (long)uuidRangeList.keySet().toArray()[ii];
+                if(winner > winnerKey) continue;
+                winnerUUID = uuidRangeList.get(winnerKey);
+                key = winnerKey;
+                break;
+            }
+            if(key == -1) continue;
+            result.add(raid.getPlayer(winnerUUID));
+        }
+        return result;
     }
 }
