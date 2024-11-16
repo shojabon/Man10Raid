@@ -246,7 +246,9 @@ public class InGameState extends RaidStateData {
     @EventHandler
     public void onDeath(PlayerDeathEvent e){
         raid.removeOneLife(e.getEntity().getUniqueId(), false);
-        raid.getPlayer(e.getEntity().getUniqueId()).saveInventoryState();
+        if(e.getEntity().getWorld()==raid.respawnLocation.getWorld()){
+            raid.getPlayer(e.getEntity().getUniqueId()).saveInventoryState();
+        }
     }
 
     @EventHandler
@@ -261,7 +263,9 @@ public class InGameState extends RaidStateData {
     public void playerQuit(PlayerQuitEvent e){
         RaidPlayer originPlayer = raid.getPlayer(e.getPlayer().getUniqueId());
         if(originPlayer == null) return;
-        originPlayer.saveInventoryState();
+        if(e.getPlayer().getWorld()==raid.respawnLocation.getWorld()){
+            originPlayer.saveInventoryState();
+        }
         raid.checkIfGameEnded();
         if(raid.removeLifeOnLogout){
             raid.removeOneLife(e.getPlayer().getUniqueId(), true);
