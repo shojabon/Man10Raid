@@ -15,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -135,7 +136,7 @@ public class InGameState extends RaidStateData {
 
     //damage functions
 
-    @EventHandler
+    @EventHandler(priority=EventPriority.HIGHEST)
     public void countDamage(EntityDamageByEntityEvent e){
         if(e.isCancelled()) return;
         if(!(e.getDamager() instanceof Player)) return;
@@ -168,7 +169,7 @@ public class InGameState extends RaidStateData {
     }
 
     //arrow damage
-    @EventHandler
+    @EventHandler(priority=EventPriority.HIGHEST)
     public void arrowDamage(EntityDamageByEntityEvent e){
         if(e.isCancelled()) return;
         if(!(e.getDamager() instanceof Arrow)) return;
