@@ -5,7 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class RaidPlayer {
@@ -29,7 +31,7 @@ public class RaidPlayer {
 
     //inventory states
     public HashMap<String, Integer> inventoryState = new HashMap<>();
-    public HashMap<String, Integer> armorState = new HashMap<>();
+//    public HashMap<String, Integer> armorState = new HashMap<>();
     private boolean inventoryStateSaved = false;
 
     public RaidPlayer(String name, UUID uuid){
@@ -46,16 +48,42 @@ public class RaidPlayer {
     //inventory functions
 
 
-    public HashMap<String, Integer> createInventoryState(ItemStack[] items){
-        HashMap<String, Integer> result = new HashMap<>();
-        for(int i = 0; i < items.length; i++){
-            if(items[i] == null) continue;
-            ItemStack item = items[i].clone();
-            String md5 = new SItemStack(item).getItemTypeMD5(false);
-            if (!result.containsKey(md5)) {
-                result.put(md5, 0);
+//    public HashMap<String, Integer> createInventoryState(ItemStack[] items){
+//        HashMap<String, Integer> result = new HashMap<>();
+//        for(int i = 0; i < items.length; i++){
+//            if(items[i] == null) continue;
+//            ItemStack item = items[i].clone();
+//            String md5 = new SItemStack(item).getItemTypeMD5(false);
+//            if (!result.containsKey(md5)) {
+//                result.put(md5, 0);
+//            }
+//            result.put(md5, result.get(md5) + item.getAmount());
+//        }
+//        return result;
+//    }
+
+    public HashMap<String,Integer> createPlayerInventoryState(Player player){
+        HashMap<String,Integer> result=new HashMap<>();
+        ItemStack[] inv=player.getInventory().getContents();
+        for(int i=0;i<inv.length;i++){
+            if(inv[i]==null)continue;
+            ItemStack item=inv[i].clone();
+            String md5=new SItemStack(item).getItemTypeMD5(false);
+            if(!result.containsKey(md5)){
+                result.put(md5,0);
             }
-            result.put(md5, result.get(md5) + item.getAmount());
+            result.put(md5,result.get(md5)+item.getAmount());
+        }
+
+        ItemStack[] armor=player.getInventory().getArmorContents();
+        for(int i=0;i<armor.length;i++){
+            if(armor[i]==null)continue;
+            ItemStack item=armor[i].clone();
+            String md5=new SItemStack(item).getItemTypeMD5(false);
+            if(!result.containsKey(md5)){
+                result.put(md5,0);
+            }
+            result.put(md5,result.get(md5)+item.getAmount());
         }
         return result;
     }
@@ -65,30 +93,44 @@ public class RaidPlayer {
         if(p == null) return;
         if(!p.isOnline()) return;
 
-        inventoryState = createInventoryState(p.getInventory().getContents());
-        armorState = createInventoryState(p.getInventory().getArmorContents());
+        inventoryState = createPlayerInventoryState(p);
+//        armorState = createInventoryState(p.getInventory().getArmorContents());
         inventoryStateSaved = true;
     }
 
     public boolean isSameInventoryState(){
         Player p = getPlayer();
-        if(!p.isOnline()) return false;
-        if(inventoryState == null || armorState == null) return true;
+        if(!p.isOnline()) {
+            System.out.println("オンラインでない");
+            return false;
+        }
+        if(inventoryState == null) return true;
         if(!inventoryStateSaved) return true;
 
-        HashMap<String, Integer> currentInventory = createInventoryState(p.getInventory().getContents());
+        HashMap<String, Integer> currentInventory = createPlayerInventoryState(p);
         for(String key : currentInventory.keySet()){
-            if(!inventoryState.containsKey(key)) return false;
-            if(inventoryState.get(key) < currentInventory.get(key)) return false;
+            if(!inventoryState.containsKey(key)) {
+                System.out.println("保存されていないアイテムが存在,"+p.name());
+                return false;
+            }
+            if(inventoryState.get(key) < currentInventory.get(key)) {
+                System.out.println("数が多い,"+p.name());
+                return false;
+            }
         }
-        HashMap<String, Integer> currentArmor = createInventoryState(p.getInventory().getArmorContents());
-        for(String key : currentArmor.keySet()){
-            if(!armorState.containsKey(key)) return false;
-            if(armorState.get(key) < currentArmor.get(key)) return false;
-        }
+//        HashMap<String, Integer> currentArmor = createInventoryState(p.getInventory().getArmorContents());
+//        for(String key : currentArmor.keySet()){
+//            if(!armorState.containsKey(key)&&!inventoryState.containsKey(key)) {
+//                System.out.println("アーマーに保存されていないアイテムが存在,"+p.name()+","+ Arrays.toString(p.getInventory().getArmorContents()));
+//                return false;
+//            }
+//            if(armorState.get(key) < currentArmor.get(key)) {
+//                System.out.println("アーマーの数が多い,"+p.name());
+//                return false;
+//            }
+//        }
         return true;
 
     }
-
 
 }
