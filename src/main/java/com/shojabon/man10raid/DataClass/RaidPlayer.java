@@ -1,6 +1,7 @@
 package com.shojabon.man10raid.DataClass;
 
 import com.shojabon.mcutils.Utils.SItemStack;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,17 +69,6 @@ public class RaidPlayer {
         for(int i=0;i<inv.length;i++){
             if(inv[i]==null)continue;
             ItemStack item=inv[i].clone();
-            String md5=new SItemStack(item).getItemTypeMD5(false);
-            if(!result.containsKey(md5)){
-                result.put(md5,0);
-            }
-            result.put(md5,result.get(md5)+item.getAmount());
-        }
-
-        ItemStack[] armor=player.getInventory().getArmorContents();
-        for(int i=0;i<armor.length;i++){
-            if(armor[i]==null)continue;
-            ItemStack item=armor[i].clone();
             String md5=new SItemStack(item).getItemTypeMD5(false);
             if(!result.containsKey(md5)){
                 result.put(md5,0);
