@@ -14,6 +14,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class RaidGame {
 
@@ -80,6 +82,8 @@ public class RaidGame {
     public float mustBeAliveForPercentOfGame = 0.65f;
     public long totalGameTime = 0;
 
+    public ArrayList<Pattern> disabledDamageCountMobs = new ArrayList<>();
+
 
     // constructors
 
@@ -134,6 +138,15 @@ public class RaidGame {
 
         winCommands = new ArrayList<>(config.getStringList("winCommands"));
         loseCommands = new ArrayList<>(config.getStringList("loseCommands"));
+
+        disabledDamageCountMobs = new ArrayList<>();
+        for(String mob: config.getStringList("settings.disabledDamageCountMobs")){
+            try{
+                disabledDamageCountMobs.add(Pattern.compile(mob));
+            }catch (PatternSyntaxException e){
+                plugin.getLogger().warning("[" + gameName + "] Invalid regex pattern: " + mob);
+            }
+        }
     }
 
     // if game playable
