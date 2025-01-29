@@ -10,10 +10,7 @@ import com.shojabon.mcutils.Utils.SScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.*;
@@ -27,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class InGameState extends RaidStateData {
 
@@ -136,6 +134,16 @@ public class InGameState extends RaidStateData {
 
     //damage functions
 
+    private boolean canDamageCount(Entity entity){
+        String entityName = entity.getCustomName() == null ? entity.getName() : entity.getCustomName();
+        for(Pattern pattern: raid.disabledDamageCountMobs){
+            if(pattern.matcher(entityName).matches()){
+                return false;
+            }
+        }
+        return true;
+    }
+
     @EventHandler(priority=EventPriority.HIGHEST)
     public void countDamage(EntityDamageByEntityEvent e){
         if(e.isCancelled()) return;
@@ -161,6 +169,8 @@ public class InGameState extends RaidStateData {
             e.setCancelled(true);
             return;
         }
+
+        if(!canDamageCount(e.getEntity())) return;
 
         //if other damage
         originPlayer.totalDamage += e.getDamage();
@@ -188,6 +198,8 @@ public class InGameState extends RaidStateData {
 
         //if dead
         if(originPlayer.livesLeft == 0) return;
+
+        if(!canDamageCount(e.getEntity())) return;
 
 
         originPlayer.totalProjectileDamage += e.getDamage();
