@@ -5,6 +5,7 @@ import com.shojabon.man10raid.Enums.RaidState;
 import com.shojabon.man10raid.Man10Raid;
 import com.shojabon.mcutils.Utils.MySQL.MySQLAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,6 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 public class RaidGame {
 
@@ -61,7 +63,7 @@ public class RaidGame {
     //location settings
     public ArrayList<Location> playerSpawnPoints = new ArrayList<>();
     public Location endArea = null;
-    public Location respawnLocation = null;
+    public ArrayList<Location> playerRespawnLocations = new ArrayList<>();
 
     //game settings
     public boolean friendlyFire = false;
@@ -101,7 +103,7 @@ public class RaidGame {
 
         //locations
         playerSpawnPoints = (ArrayList<Location>) config.getList("locations.playerSpawn", new ArrayList<Location>());
-        respawnLocation = config.getLocation("locations.playerRespawn");
+        playerRespawnLocations = (ArrayList<Location>) config.getList("locations.playerRespawn", new ArrayList<Location>());
         endArea = config.getLocation("locations.endArea");
 
         //payout
@@ -342,8 +344,8 @@ public class RaidGame {
         Man10Raid.api.saveRaidGameConfig(this);
     }
 
-    public void setRespawnLocation(Location l){
-        respawnLocation = l;
+    public void addRespawnLocation(Location l){
+        playerRespawnLocations.add(l);
         Man10Raid.api.saveRaidGameConfig(this);
     }
 
@@ -403,11 +405,11 @@ public class RaidGame {
         if(p.isOnline() && !playerLeft){
             if(deadPlayer.livesLeft > 0) {
                 //player still can play in arena
-                if(respawnLocation == null){
+                if(playerRespawnLocations.isEmpty()){
                     //no respawn point
                     p.setBedSpawnLocation(playerSpawnPoints.get(0), true);
                 }else{
-                    p.setBedSpawnLocation(respawnLocation, true);
+                    p.setBedSpawnLocation(playerRespawnLocations.get(new Random().nextInt(playerRespawnLocations.size())), true);
                 }
                 p.sendMessage("残りライフ" + deadPlayer.livesLeft);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*10, 50));
@@ -452,11 +454,31 @@ public class RaidGame {
     }
 
     public void teleportPlayerToArena(Player p){
-        if(respawnLocation == null){
+        if(playerRespawnLocations.isEmpty()){
             p.teleport(playerSpawnPoints.get(0));
         }else{
-            p.teleport(respawnLocation);
+            p.teleport(playerRespawnLocations.get(new Random().nextInt(playerRespawnLocations.size())));
         }
+    }
+
+    public void teleportPlayerNearRandomPlayer(Player player){
+        Collection<Player> players=playerSpawnPoints.get(0).getNearbyPlayers(500,500).stream().filter(allowedPlayer -> allowedPlayer.getGameMode()==GameMode.SURVIVAL|| allowedPlayer.getGameMode()==GameMode.SURVIVAL).collect(Collectors.toList());
+        if(players.isEmpty()){
+            player.teleport(playerSpawnPoints.get(0));
+            return;
+        }
+        int size=players.size();
+        int rand=new Random().nextInt(size);
+        Player basePlayer= (Player) players.toArray()[rand];
+        Optional<Location> nearestRespawnLoc=playerRespawnLocations.stream().min(Comparator.comparing(location -> location.distance(basePlayer.getLocation())));
+
+        if(nearestRespawnLoc.isPresent()){
+            player.teleport(nearestRespawnLoc.get());
+        }
+        else{
+            player.teleport(playerSpawnPoints.get(0));
+        }
+
     }
 
     public void payOutToPlayers(int game){
@@ -464,6 +486,7 @@ public class RaidGame {
         for(RaidPlayer player: players){
             if(player.getPlayer() == null) continue;
             if(!player.getPlayer().isOnline()) continue;
+            if(player.livesLeft<1)continue;
             long money = (long) (player.totalDamage * totalDamagePayoutMultiplier +
                                 player.totalProjectileDamage * totalProjectileDamagePayoutMultiplier +
                                 player.totalHeal * totalHealPayoutMultiplier +

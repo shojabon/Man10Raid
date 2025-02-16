@@ -29,7 +29,7 @@ public class CongratulationsState extends RaidStateData {
         for(RaidPlayer player : raid.getPlayersInGame(raid.currentGame)){
             if(player.getPlayer() == null) continue;
             if(!player.getPlayer().isOnline()) continue;
-            if(player.getPlayer().getLocation().getWorld()!=raid.respawnLocation.getWorld()&&!player.isSameInventoryState()){
+            if(player.getPlayer().getLocation().getWorld()!= raid.playerSpawnPoints.get(0).getWorld()&&!player.isSameInventoryState()){
 
                 player.getPlayer().sendMessage(Man10Raid.prefix + "§c§lインベントリの状態が同じではありません");
                 player.livesLeft=0;
