@@ -8,10 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SetArenaPlayerRespawnPointCommand implements CommandExecutor {
+public class AddArenaPlayerRespawnPointCommand implements CommandExecutor {
     Man10Raid plugin;
 
-    public SetArenaPlayerRespawnPointCommand(Man10Raid plugin){
+    public AddArenaPlayerRespawnPointCommand(Man10Raid plugin){
         this.plugin = plugin;
     }
 
@@ -26,7 +26,7 @@ public class SetArenaPlayerRespawnPointCommand implements CommandExecutor {
             sender.sendMessage(Man10Raid.prefix + "§c§lアリーナが存在しません");
             return false;
         }
-        raid.setRespawnLocation(((Player) sender).getLocation());
+        raid.addRespawnLocation(((Player) sender).getLocation());
         Man10Raid.api.saveRaidGameConfig(raid);
         sender.sendMessage(Man10Raid.prefix + "§a§lプレイヤーリスポーンの設定をしました");
         return true;

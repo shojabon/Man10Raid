@@ -48,7 +48,7 @@ public class Man10RaidAPI {
 
         //locations
         config.set("locations.playerSpawn", game.playerSpawnPoints);
-        config.set("locations.playerRespawn", game.respawnLocation);
+        config.set("locations.playerRespawn", game.playerRespawnLocations);
         config.set("locations.endArea", game.endArea);
 
         //settings

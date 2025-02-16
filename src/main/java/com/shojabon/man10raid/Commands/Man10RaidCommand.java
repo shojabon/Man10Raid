@@ -207,9 +207,9 @@ public class Man10RaidCommand extends SCommandRouter {
                 new SCommandObject()
                         .addArgument(new SCommandArgument().addAllowedString("setting")).
                         addArgument(new SCommandArgument().addAlias("アリーナ名")).
-                        addArgument(new SCommandArgument().addAllowedString("setRespawn")).
+                        addArgument(new SCommandArgument().addAllowedString("addRespawn")).
                         addRequiredPermission("man10raid.settings.arena.playerRespawn").addExplanation("アリーナのスポーンポイントを設定する").
-                        setExecutor(new SetArenaPlayerRespawnPointCommand(plugin))
+                        setExecutor(new AddArenaPlayerRespawnPointCommand(plugin))
         );
 
         addCommand(

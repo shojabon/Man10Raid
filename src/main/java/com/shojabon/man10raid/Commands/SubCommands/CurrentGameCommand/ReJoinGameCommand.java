@@ -51,7 +51,7 @@ public class ReJoinGameCommand implements CommandExecutor {
             return true;
         }
 
-        raid.teleportPlayerToArena(player.getPlayer());
+        raid.teleportPlayerNearRandomPlayer(player.getPlayer());
 
         return true;
     }
