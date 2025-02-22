@@ -36,7 +36,9 @@ public class Man10RaidAPI {
             if(!path.mkdirs()) return false;
         }
 
-        YamlConfiguration config = new YamlConfiguration();
+        File customConfigFile = new File(plugin.getDataFolder() + File.separator + "games", game.gameName + ".yml");
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(customConfigFile);
         // save data
         config.set("scheduledGames", game.scheduledGames);
 
@@ -66,7 +68,6 @@ public class Man10RaidAPI {
         config.set("payout.totalFriendlyFire", game.totalFriendlyFirePayoutMultiplier);
 
         //file check
-        File customConfigFile = new File(plugin.getDataFolder() + File.separator + "games", game.gameName + ".yml");
         try {
             config.save(customConfigFile);
         } catch (IOException e) {
